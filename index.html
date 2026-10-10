@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#080f1d" />
   <meta name="description" content="Atlas AI: seu painel pessoal de tarefas, informações e organização." />
-  <title>Atlas AI 0.4 · Escritório Virtual</title>
+  <title>Atlas AI 0.5 · Escritório Virtual Vivo</title>
   <style>
     :root {color-scheme:dark; --bg:#080f1d;--panel:#101e33;--panel2:#152943;--nav:#0a1628;--line:#283b56;--blue:#3b91fc;--blue2:#92c5ff;--white:#eef6ff;--muted:#90a8c5;--danger:#ff9eab;--green:#84ddc1}
     *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--white)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}a{color:var(--blue2)}
@@ -48,6 +48,57 @@
 .office-list{max-height:360px;overflow:auto}
 @media(max-width:900px){.office-operation{grid-template-columns:1fr}.office-reference-label{font-size:10px}.office-form-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.office-reference{overflow-x:auto;scrollbar-color:#5683ac #0b192c}.office-reference img{width:700px;max-width:none;transform:none}.office-reference-label{position:sticky;left:10px;bottom:9px;width:max-content;font-size:10px}.office-form-grid{grid-template-columns:1fr}}
+
+/* Live office overlay: visual motion never implies a task is running unless the DB records it. */
+#live-office-scene { isolation:isolate }
+.atlas-bot-motion { position:absolute; z-index:3; width:5.2%; aspect-ratio:1; pointer-events:none; filter:drop-shadow(0 0 7px #259fff70); animation:robotSway 3.8s ease-in-out infinite;transform-origin:center bottom }
+.atlas-bot-motion.secretaria { left:72.5%; top:41.1%; animation-delay:-1.5s; filter:drop-shadow(0 0 7px #af82ff9a) }
+.atlas-bot-motion.atlas { left:41.4%; top:37.5% }
+.atlas-bot-motion svg {width:100%;height:100%;overflow:visible;display:block}
+.atlas-bot-motion.busy{animation:robotWork 0.65s ease-in-out infinite}
+.atlas-bot-motion.busy .bot-eyes{animation:botBlink 1.8s ease-in-out infinite}
+.atlas-bot-motion.bouncing {animation:robotSway 3s ease-in-out infinite}
+@keyframes robotSway {0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes robotWork {0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-2px) rotate(1.5deg)}}
+@keyframes botBlink {0%,84%,100%{opacity:1}90%{opacity:.24}}
+.atlas-live-label { position:absolute; z-index:4; color:#dceeff;background:#071426f5;border:1px solid #3976b6;border-radius:9px;padding:7px 11px;box-shadow:0 8px 20px #000a;min-width:138px;max-width:27%; font-size:clamp(9px,.85vw,14px);cursor:pointer }
+.atlas-live-label b {display:block;color:#eaf5ff;font-size:1.05em;white-space:nowrap}
+.atlas-live-label small {display:block;color:#83d5ff;max-height:2.6em;line-height:1.3;overflow:hidden;white-space:normal;margin-top:2px}
+.atlas-live-label.atlas {left:35.5%;top:26.2%;border-color:#267dc2}
+.atlas-live-label.secretaria {left:70%;top:30.6%;border-color:#7b61d6}
+.atlas-live-label.busy {box-shadow:0 0 24px #2899ff60}
+.atlas-live-label .status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#87c9fd;margin-right:5px}
+.atlas-live-label.busy .status-dot {background:#50e9ba;animation:pulsedot .8s infinite alternate}
+.atlas-live-label.warning .status-dot {background:#ffcc74}
+@keyframes pulsedot{to{opacity:.24}}
+.atlas-live-events {position:absolute;z-index:4;right:1.3%;bottom:3.6%;background:#081321f8;border:1px solid #345078;border-radius:6px;width:25%;padding:7px;min-height:12%;box-shadow:0 4px 13px #0008;color:#d3edff}
+.atlas-live-events header {display:flex;align-items:center;gap:4px;font-weight:750;font-size:clamp(8px,.8vw,13px);letter-spacing:.02em;color:#7cc7ff;margin-bottom:6px}
+.atlas-live-events .event {border-top:1px solid #293b57;padding:4px 0;font-size:clamp(7px,.7vw,11px);line-height:1.4;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-live-events .event span{color:#64c5c7;margin-right:4px}
+.atlas-live-overlay-note {position:absolute;z-index:4;left:1%;bottom:1%;font-size:clamp(7px,.6vw,10px);background:#08192dc9;color:#aac4df;padding:4px 6px;border-radius:4px}
+.atlas-live-popup{ position:fixed;right:14px;top:88px;z-index:1000;width:min(330px,calc(100vw - 28px));background:#0c2036;border:1px solid #60a9fc;border-radius:12px;box-shadow:0 15px 50px #000b;padding:13px 16px;animation:popupIn .24s ease-out;display:flex;align-items:start;gap:12px }
+.atlas-live-popup b {font-size:13px}.atlas-live-popup p {font-size:12px;color:#b7cee9;margin:6px 0 0;line-height:1.5}.atlas-live-popup button{background:transparent;color:#cdddec;border:0;cursor:pointer}
+@keyframes popupIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.atlas-stream-state{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#98bfdc;background:#152a43;border-radius:40px;border:1px solid #386087;padding:5px 9px;margin:10px 0}
+#site-source-list .office-listrow{flex-wrap:wrap}
+#site-source-list .office-listrow .office-row-actions{flex-wrap:wrap;max-width:100%}
+#site-check-list .office-listrow{display:block}
+@media(max-width:750px){.atlas-live-events{width:28%;right:.5%;bottom:3.5%;padding:4px}.atlas-live-events .event{font-size:7px}.atlas-live-label{font-size:9px;padding:5px 7px;min-width:100px}.atlas-live-label.atlas{left:34%;top:25%}.atlas-live-label.secretaria{left:70%;top:31%}.atlas-live-overlay-note{display:none}}
+@media(prefers-reduced-motion:reduce){.atlas-bot-motion,.atlas-bot-motion.busy,.atlas-bot-motion.busy .bot-eyes,.atlas-live-label.busy .status-dot,.atlas-live-popup{animation:none!important}}
+/* No celular, o cenário inteiro precisa aparecer antes de qualquer ampliação. */
+@media(max-width:600px){
+  #live-office-scene {overflow:hidden}
+  #live-office-scene img{width:100%;max-width:100%;height:auto}
+  #live-office-scene .atlas-live-events{display:none}
+  #live-office-scene .atlas-live-label{min-width:0;width:29%;max-width:none;font-size:7px;padding:4px 5px;border-radius:5px}
+  #live-office-scene .atlas-live-label.atlas{left:33%;top:26%}
+  #live-office-scene .atlas-live-label.secretaria{left:70%;top:31%}
+  #live-office-scene .atlas-live-label b{font-size:8px}
+  #live-office-scene .atlas-live-label small{font-size:7px;max-height:3.8em;overflow:hidden}
+  #live-office-scene .atlas-bot-motion{filter:drop-shadow(0 0 3px #398fff88)}
+  #live-office-scene .office-reference-label{position:static;display:block;background:#09182a;border-radius:0;padding:8px;font-size:9px;width:auto;max-width:none}
+}
+
 </style>
 </head>
 <body>
@@ -75,6 +126,7 @@
         <button class="nav-btn" data-page="escritorio"><i>⌘</i> Escritório Virtual</button>
         <button class="nav-btn" data-page="tarefas"><i>☑</i> Minhas tarefas</button>
         <button class="nav-btn" data-page="emails"><i>✉</i> E-mails</button>
+        <button class="nav-btn" data-page="sites"><i>◎</i> Monitorar sites</button>
         <button class="nav-btn" data-page="documentos"><i>▤</i> Documentos</button>
         <button class="nav-btn" data-page="memoria"><i>◉</i> Memória</button>
         <button class="nav-btn" data-page="config"><i>⚙</i> Configurações</button>
@@ -96,7 +148,7 @@
             <div class="office-heading"><div class="eyebrow">CENTRAL DE AGENTES · VISÃO ISOMÉTRICA 2D</div><h2>Escritório Virtual<span style="color:var(--blue)">.</span></h2><p>Envie comandos diretamente aos seus agentes e programe rotinas diárias. A cena é ilustrativa; os registros operacionais vêm do Supabase.</p></div>
             <div class="office-metrics"><div class="office-metric"><small>Agentes do escritório</small><b>02</b></div><div class="office-metric"><small>Comandos registrados</small><b id="office-metric-commands">00</b></div><div class="office-metric"><small>Rotinas ativas</small><b id="office-metric-routines">00</b></div></div>
             <section class="office-stage" aria-label="Cena ilustrada do escritório virtual">
-              <div class="office-stage-top"><b><span class="live-dot"></span> ATLAS / Escritório</b><small id="office-scene-mode">Visualização demonstrativa</small></div><div class="office-reference"><img src="escritorio-atlas.webp" alt="Ilustração isométrica em pixel art do escritório futurista Atlas, com os robôs Atlas e Secretária AI em estações de trabalho" loading="lazy"/><div class="office-reference-label">ARTE CONCEITUAL · Os painéis ilustrados não mostram atividades reais. Consulte o estado operacional abaixo.</div></div>
+              <div class="office-stage-top"><b><span class="live-dot"></span> ATLAS / Escritório</b><small id="office-scene-mode">Acompanhamento operacional</small></div><div class="office-reference" id="live-office-scene"><img src="escritorio-atlas.webp" alt="Ilustração isométrica em pixel art do escritório futurista Atlas, com os robôs Atlas e Secretária AI em estações de trabalho" loading="lazy"/><div class="office-reference-label">ARTE CONCEITUAL · Somente painéis dinâmicos mostram atividades registradas.</div></div>
               <div class="office-scroller"><div class="office-canvas">
 <svg class="office-scene" viewBox="0 0 1040 535" role="img" aria-labelledby="scene-title scene-desc" xmlns="http://www.w3.org/2000/svg">
 <title id="scene-title">Escritório virtual corporativo do Atlas</title>
@@ -220,7 +272,30 @@
           <div class="filters"><select id="filter-area" aria-label="Área"><option value="all">Todas as áreas</option><option value="pessoal">Pessoal</option><option value="profissional">Profissional</option><option value="a_classificar">A classificar</option></select><select id="filter-status" aria-label="Status"><option value="all">Todos os status</option><option value="pendente">Pendentes</option><option value="em_andamento">Em andamento</option><option value="concluida">Concluídas</option><option value="cancelada">Canceladas</option></select></div>
           <section class="panel" id="tasks-list"></section>
         </section>
-        <section class="page" id="page-emails"><div class="heading"><div><div class="eyebrow">COMUNICAÇÃO</div><h2>E-mails</h2><p>Classificação inteligente, pendências e sugestões de resposta.</p></div></div><div class="panel empty"><div class="empty-icon">✉</div><h3>Integração em preparação</h3><p>Seu Gmail conectado ao ChatGPT não está automaticamente disponível neste site. Para conectar aqui, configuraremos uma autorização OAuth própria, com sua aprovação.</p></div></section>
+        
+<section class="page" id="page-sites">
+ <div class="heading"><div><div class="eyebrow">PESQUISA E ACOMPANHAMENTO</div><h2>Sites monitorados</h2><p>Defina páginas ou feeds públicos que seus agentes deverão acompanhar.</p></div></div>
+ <div class="office-panel-note" id="sites-notice">Acompanhamento inicial: cadastramento e consulta manual de páginas públicas HTTPS. A execução automática em segundo plano ainda depende da ativação do agendador de sites. Não é possível acessar sites que exigem login ou resolver páginas inteiramente em JavaScript nesta etapa.</div>
+ <div class="office-operation"><section class="panel"><h3>Adicionar fonte</h3>
+  <form id="site-source-form" class="office-form">
+    <label>Nome de identificação<input id="site-name" maxlength="120" required placeholder="Ex.: Notícias Receita Federal"></label>
+    <label>Endereço público HTTPS<input id="site-url" type="url" pattern="https://.*" maxlength="1000" required placeholder="https://exemplo.gov.br/noticias"></label>
+    <div class="office-form-grid"><label>Responsável<select id="site-agent"><option value="secretaria">Secretária AI</option><option value="atlas">Atlas</option></select></label><label>Conteúdo<select id="site-kind"><option value="pagina">Página pública</option><option value="rss">Feed RSS/Atom</option></select></label></div>
+    <label>Frequência desejada<select id="site-frequency"><option value="60">A cada hora</option><option value="360">A cada 6 horas</option><option value="720">A cada 12 horas</option><option value="1440" selected>Diariamente</option><option value="10080">Semanalmente</option></select></label>
+    <button type="submit" class="btn">Salvar fonte</button><div class="office-result" id="site-create-result" role="status"></div>
+  </form></section>
+ <section class="panel"><h3>Fontes cadastradas</h3><div id="site-source-list" class="office-list"></div><p id="site-list-message" class="office-help"></p></section></div>
+ <div class="panel"><h3>Histórico de verificações</h3><p class="office-help">Mudanças são detectadas por comparação do texto público. Isso não é uma análise semântica por IA.</p><div id="site-check-list" class="office-list"></div></div>
+</section>
+
+<section class="page" id="page-emails"><div class="heading"><div><div class="eyebrow">COMUNICAÇÃO</div><h2>Gmail / Google Drive</h2><p>Acesso somente após autorização Google específica do Atlas.</p></div></div>
+<div class="panel" style="max-width:850px"><h3>🔐 Conexão Google — autorização pendente</h3><p class="sub">Seu login no Atlas está funcionando. Para ler Gmail e documentos sem abrir sua senha, criaremos um aplicativo OAuth no Google Cloud. Por segurança, tokens de longa duração deverão ficar somente no servidor.</p>
+<div class="office-panel-note">O Gmail que você conectou ao ChatGPT não é automaticamente compartilhado com o Atlas. Ainda não há leitura de mensagens, envio de e-mails ou conexão ativa ao Drive neste site.</div>
+<p class="sub"><b>Passo 1.</b> Criar um projeto em Google Cloud, configurar marca e público de teste, registrar seu e-mail como usuário de teste.</p>
+<p class="sub"><b>Passo 2.</b> Criar credenciais OAuth do tipo Aplicação Web e cadastrar o domínio definitivo do Atlas; habilitar Gmail API e Google Drive API com permissões mínimas de leitura.</p>
+<p class="sub"><b>Passo 3.</b> Armazenar o Client Secret no servidor, configurar o fluxo OAuth e somente então habilitar o botão “Conectar Google”.</p>
+<a href="https://console.cloud.google.com/auth/overview" target="_blank" rel="noopener noreferrer" class="btn" style="display:inline-block;text-decoration:none;margin-top:7px">Abrir configuração Google Cloud ↗</a>
+<p class="sub" style="margin-top:20px">Rascunhos de e-mail exigirão sua aprovação antes de qualquer envio. Nenhuma alteração em documentos ocorrerá automaticamente.</p></div></section>
         <section class="page" id="page-documentos"><div class="heading"><div><div class="eyebrow">ARQUIVOS</div><h2>Documentos</h2><p>Localize documentos e obtenha sugestões de organização.</p></div></div><div class="panel empty"><div class="empty-icon">▤</div><h3>Google Drive ainda não conectado</h3><p>Documentos só serão acessados após você autorizar o site. Nenhum arquivo poderá ser movido ou excluído sem confirmação.</p></div></section>
         <section class="page" id="page-memoria"><div class="heading"><div><div class="eyebrow">CONHECIMENTO</div><h2>Memória do Atlas</h2><p>Preferências e informações sob seu controle.</p></div><button class="btn" id="new-memory">+ Adicionar memória</button></div><div id="memories-list" class="panel"></div></section>
         <section class="page" id="page-config"><div class="heading"><div><div class="eyebrow">SISTEMA</div><h2>Configurações</h2><p>Informações sobre seu acesso e integrações.</p></div></div><div class="panel"><h3>Estado do Atlas</h3><p class="text-note" id="config-state"></p><p class="text-note">Resumo agendado no ChatGPT: todos os dias, às 08h (Brasília). O agendamento atual do ChatGPT é independente desta aplicação.</p><p class="text-note">Tema: preto e azul. Conta: usuário único. Alterações em documentos e envio de mensagens exigem aprovação.</p></div></section>
@@ -243,7 +318,7 @@
       {id:'demo-2',title:'Conferir documentos importantes',description:'Exemplo fictício',area:'profissional',priority:'alta',status:'pendente',due_at:null},
       {id:'demo-3',title:'Organizar prioridades',description:'Exemplo fictício',area:'pessoal',priority:'baixa',status:'concluida',due_at:null}
     ];
-    const state = {session:null,user:null,mode:'auth',tasks:[],memories:[],commands:[],routines:[],executions:[],signup:false};
+    const state = {session:null,user:null,mode:'auth',tasks:[],memories:[],commands:[],routines:[],executions:[],webSources:[],webChecks:[],approvals:[],signup:false};
     const labels = {pessoal:'Pessoal',profissional:'Profissional',a_classificar:'A classificar',baixa:'Baixa',media:'Média',alta:'Alta',critica:'Crítica'};
     function elt(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el;}
     function errorMessage(e){return e?.message||'Não foi possível completar a solicitação.';}
@@ -287,9 +362,9 @@
       state.tasks=Array.isArray(tasks)?tasks:[];state.memories=Array.isArray(memories)?memories:[];state.commands=Array.isArray(commands)?commands:[];state.routines=Array.isArray(routines)?routines:[];state.executions=Array.isArray(executions)?executions:[];
     }
     function enterDemo(){state.mode='demo';state.tasks=demoSamples.map(t=>({...t}));state.memories=[];state.commands=[];state.routines=[];state.executions=[];showApp();}
-    function showApp(){ $('#auth-screen').classList.add('hidden');$('#app').classList.remove('hidden');$('#chat-button').classList.remove('hidden');$('#app-mode').textContent=state.mode==='demo'?'Demonstração':'Conectado ao Supabase';$('#mode-label').textContent=state.mode==='demo'?'Dados fictícios':'Conta autenticada';$('#account-label').textContent=state.mode==='demo'?'Atlas AI':(state.user?.email||'Minha conta');$('#main-callout').textContent=state.mode==='demo'?'Modo demonstração: exemplos fictícios que não são armazenados. Não insira dados privados.':'Sua lista de tarefas e memórias é armazenada no Supabase. Gmail, Drive e IA ainda dependem de autorização e integração próprias.';$('#config-state').textContent=state.mode==='demo'?'Demonstração sem acesso ao banco. Entre na conta titular para salvar tarefas.':'Conectado ao Supabase. Autenticação com e-mail e senha ativa; integração de login Google pendente de configuração OAuth.';navigate('escritorio');render();renderOffice();}
+    function showApp(){ $('#auth-screen').classList.add('hidden');$('#app').classList.remove('hidden');$('#chat-button').classList.remove('hidden');$('#app-mode').textContent=state.mode==='demo'?'Demonstração':'Conectado ao Supabase';$('#mode-label').textContent=state.mode==='demo'?'Dados fictícios':'Conta autenticada';$('#account-label').textContent=state.mode==='demo'?'Atlas AI':(state.user?.email||'Minha conta');$('#main-callout').textContent=state.mode==='demo'?'Modo demonstração: exemplos fictícios que não são armazenados. Não insira dados privados.':'Sua lista de tarefas e memórias é armazenada no Supabase. Gmail, Drive e IA ainda dependem de autorização e integração próprias.';$('#config-state').textContent=state.mode==='demo'?'Demonstração sem acesso ao banco. Entre na conta titular para salvar tarefas.':'Conectado ao Supabase. Autenticação com e-mail e senha ativa; integração de login Google pendente de configuração OAuth.';navigate('escritorio');render();renderOffice();if(state.mode==='real'){officeReload().then(()=>connectOfficeRealtime()).catch(e=>console.warn('Falha ao atualizar escritório',e));}}
     function showAuth(){state.mode='auth';$('#auth-screen').classList.remove('hidden');$('#app').classList.add('hidden');$('#chat-window').classList.add('hidden');$('#chat-button').classList.add('hidden');}
-    function navigate(page){$$('.page').forEach(el=>el.classList.toggle('selected',el.id==='page-'+page));$$('.nav-btn').forEach(el=>el.classList.toggle('selected',el.dataset.page===page));$('#page-title').textContent=({inicio:'Visão geral',tarefas:'Minhas tarefas',emails:'E-mails',documentos:'Documentos',memoria:'Memória',config:'Configurações',escritorio:'Escritório Virtual','agente-atlas':'Atlas · Coordenador','agente-secretaria':'Secretária AI'})[page]||'Atlas';$('#sidebar').classList.remove('open');$('#overlay').hidden=true;}
+    function navigate(page){$$('.page').forEach(el=>el.classList.toggle('selected',el.id==='page-'+page));$$('.nav-btn').forEach(el=>el.classList.toggle('selected',el.dataset.page===page));$('#page-title').textContent=({inicio:'Visão geral',tarefas:'Minhas tarefas',emails:'E-mails',documentos:'Documentos',memoria:'Memória',config:'Configurações',escritorio:'Escritório Virtual','agente-atlas':'Atlas · Coordenador','agente-secretaria':'Secretária AI',sites:'Sites monitorados'})[page]||'Atlas';$('#sidebar').classList.remove('open');$('#overlay').hidden=true;}
     function dateLabel(value){if(!value)return 'Sem prazo';const d=new Date(value);return Number.isNaN(d.getTime())?'Sem prazo':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});}
     function orderedTasks(){return [...state.tasks].sort((a,b)=>({critica:0,alta:1,media:2,baixa:3})[a.priority]-({critica:0,alta:1,media:2,baixa:3})[b.priority]);}
     function render(){
@@ -358,12 +433,15 @@
        for(const e of events){const row=elt('div',undefined,'feedrow');row.append(elt('span','◷','feedicon'));const t=elt('div');t.append(elt('b',e.title),elt('small',`${formatOfficeTime(e.when)} · ${e.details}`));row.append(t);feed.append(row);}
        if(!events.length)feed.append(elt('p','Nenhuma execução real registrada.','office-help'));
      }
-     async function officeReload(){if(state.mode!=='real')return;await ensureSession();const [tasks,commands,routines,executions]=await Promise.all([
+     async function officeReload(){if(state.mode!=='real')return;await ensureSession();const [tasks,commands,routines,executions,webSources,webChecks,approvals]=await Promise.all([
        api('atlas_tasks',{query:'?select=id,title,description,area,status,priority,due_at,due_is_estimated,created_at&order=created_at.desc&limit=300'}),
        api('atlas_agent_commands',{query:'?select=id,agent,command_kind,prompt,status,result_summary,created_at&order=created_at.desc&limit=60'}),
        api('atlas_daily_routines',{query:'?select=id,title,instruction,agent,action_type,area,priority,run_time,enabled,last_run_local_date,created_at&order=created_at.desc&limit=100'}),
-       api('atlas_daily_executions',{query:'?select=routine_id,local_date,status,result_note,created_at&order=created_at.desc&limit=60'})]);
-       state.tasks=tasks||[];state.commands=commands||[];state.routines=routines||[];state.executions=executions||[];render();renderOffice();}
+       api('atlas_daily_executions',{query:'?select=routine_id,local_date,status,result_note,created_at&order=created_at.desc&limit=60'}),
+       api('atlas_web_sources',{query:'?select=id,name,url,agent,kind,frequency_minutes,enabled,status,last_title,last_checked_at,last_changed_at,last_error,created_at&order=created_at.desc&limit=100'}),
+       api('atlas_web_checks',{query:'?select=id,source_id,agent,status,title,details,checked_at&order=checked_at.desc&limit=80'}),
+       api('atlas_approvals',{query:'?select=id,action_type,status,requested_at,action_details&order=requested_at.desc&limit=50'})]);
+       state.tasks=tasks||[];state.commands=commands||[];state.routines=routines||[];state.executions=executions||[];state.webSources=webSources||[];state.webChecks=webChecks||[];state.approvals=approvals||[];render();renderOffice();renderSites();renderLiveOffice();}
      $('#office-command-form').addEventListener('submit',async e=>{
        e.preventDefault();const out=$('#office-command-result'),btn=e.currentTarget.querySelector('button[type=submit]');
        if(state.mode!=='real'){out.textContent='Entre na conta titular para enviar comandos reais.';return;}
@@ -391,6 +469,145 @@
      $$('[data-agent-chat]').forEach(btn=>btn.onclick=()=>{navigate('escritorio');$('#office-command-agent').value=btn.dataset.agent;$('#office-command-text').focus();});
      document.querySelectorAll('.nav-btn[data-page="escritorio"]').forEach(b=>b.addEventListener('click',()=>{if(state.mode==='real')officeReload().catch(e=>console.warn('Falha ao atualizar escritório',e));}));
     (async()=>{try{const saved=JSON.parse(sessionStorage.getItem('atlas_session_v1')||'null');if(saved?.access_token){state.session=saved;await enterReal();}}catch(e){saveSession(null);showAuthMessage('Faça login para acessar seus dados.',false);}})();
-  </script>
+  
+// Escritório 0.5: sobreposições de status verificáveis e monitor de sites públicos.
+// Se falhar a conexão Realtime, o painel faz polling enquanto a página estiver visível.
+const robotSvg = `<svg viewBox="0 0 90 90" aria-hidden="true"><path d="M17 38V20Q17 7 45 7T73 20V38" fill="#e8f1ff" stroke="#123150" stroke-width="4"/><rect x="14" y="25" width="62" height="50" rx="21" fill="#e9f1ff" stroke="#173959" stroke-width="4"/><rect x="23" y="34" width="44" height="32" rx="13" fill="#0a1731"/><g class="bot-eyes"><rect x="31" y="47" width="8" height="5" rx="2" fill="#53c9ff"/><rect x="52" y="47" width="8" height="5" rx="2" fill="#53c9ff"/></g><path d="M39 59Q45 63 52 59" fill="none" stroke="#65caff" stroke-width="2.5" stroke-linecap="round"/><rect x="8" y="39" width="10" height="20" rx="5" fill="#418fd4"/><rect x="72" y="39" width="10" height="20" rx="5" fill="#418fd4"/><path d="M27 76Q45 90 63 76" fill="#dfeeff" stroke="#21578b" stroke-width="3"/></svg>`;
+const liveOffice = { initialized:false, armed:false, seen:new Set(), subscription:null, lastPoll:0, lastActivityAt:null, activeAgent:null, activeUntil:0, lastAutoError:null };
+function liveEl(tag,className,text){const e=document.createElement(tag);if(className)e.className=className;if(text!==undefined)e.textContent=text;return e;}
+function initOfficeScene(){
+  if(liveOffice.initialized)return;
+  const scene=$('#live-office-scene');if(!scene)return;
+  liveOffice.initialized=true;
+  for(const key of ['atlas','secretaria']){
+    const bot=liveEl('div','atlas-bot-motion '+key);bot.id='live-bot-'+key;bot.innerHTML=robotSvg;scene.append(bot);
+    const label=liveEl('button','atlas-live-label '+key);label.type='button';label.id='live-label-'+key;
+    const title=liveEl('b','',key==='atlas'?'✦ ATLAS':'✉ SECRETÁRIA AI');
+    const info=liveEl('small','',state.mode==='real'?'Disponível para comandos':'Ilustração do agente');
+    label.append(title,info);label.addEventListener('click',()=>navigate('agente-'+key));scene.append(label);
+  }
+  const events=liveEl('section','atlas-live-events');events.id='live-scene-events';events.append(liveEl('header','','◷ REGISTROS DO SISTEMA'));scene.append(events);
+  const note=liveEl('span','atlas-live-overlay-note','Os painéis da arte são ilustrativos; acompanhe os dados vivos.');scene.append(note);
+  const stateBadge=liveEl('span','atlas-stream-state','◷ Sincronizando eventos');stateBadge.id='office-stream-state';
+  const heading=$('#page-escritorio .office-heading');heading?.append(stateBadge);
+}
+function recentLiveEvents(){
+  const events=[...(state.commands||[]).map(x=>({id:'c:'+x.id,at:x.created_at,agent:x.agent,title:(x.status==='concluido'?'Tarefa criada':x.status==='aguardando_integracao'?'Google ainda não conectado':x.status==='aguardando_motor'?'IA ainda não conectada':'Comando recebido'),detail:x.prompt})),
+    ...(state.executions||[]).map(x=>({id:'r:'+x.routine_id+':'+x.local_date,at:x.created_at,agent:'atlas',title:x.status==='concluido'?'Rotina criada':'Rotina registrada',detail:x.result_note||''})),
+    ...(state.webChecks||[]).map(x=>({id:'w:'+x.id,at:x.checked_at,agent:x.agent,title:x.status==='alterado'?'Mudança em site':x.status==='erro'?'Falha na consulta':'Site verificado',detail:x.title||x.details||''})),
+    ...(state.approvals||[]).map(x=>({id:'a:'+x.id+':'+x.status,at:x.requested_at,agent:'atlas',title:x.status==='pendente'?'Aprovação pendente':'Aprovação atualizada',detail:x.action_type||''}))];
+  return events.filter(x=>x.at).sort((a,b)=>new Date(b.at)-new Date(a.at)).slice(0,35);
+}
+function addInAppPopup(event){
+  if(state.mode!=='real' || document.hidden)return;
+  const previous=$('.atlas-live-popup');if(previous)previous.remove();
+  const toast=liveEl('aside','atlas-live-popup');toast.setAttribute('role','status');
+  const inner=liveEl('div');inner.append(liveEl('b','',event.title),liveEl('p','',String(event.detail||'').slice(0,150)));
+  const close=liveEl('button','','×');close.type='button';close.setAttribute('aria-label','Fechar aviso');close.onclick=()=>toast.remove();
+  toast.append(inner,close);document.body.append(toast);setTimeout(()=>{if(toast.isConnected)toast.remove();},6500);
+}
+function renderLiveOffice(){
+  initOfficeScene();if(!liveOffice.initialized)return;
+  const events=state.mode==='real'?recentLiveEvents():[];
+  const target=$('#live-scene-events');target.replaceChildren(liveEl('header','','◷ '+(state.mode==='real'?'ATIVIDADE REGISTRADA':'MODO DEMONSTRAÇÃO')));
+  for(const e of events.slice(0,4)){
+    const row=liveEl('div','event');const time=new Date(e.at).toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'});
+    row.append(liveEl('span','',time),document.createTextNode(' '+e.title));target.append(row);
+  }
+  if(!events.length)target.append(liveEl('div','event',state.mode==='real'?'Nenhum evento registrado':'Prévia sem execuções reais'));
+  for(const agent of ['atlas','secretaria']){
+    const latest=events.find(e=>e.agent===agent);
+    const waiting=(state.commands||[]).filter(c=>c.agent===agent && (c.status==='aguardando_integracao'||c.status==='aguardando_motor')).length;
+    const pendingApprovals=(state.approvals||[]).filter(a=>a.status==='pendente').length;
+    // Pulse only for a recent verified DB event, never for an invented task.
+    const recently=latest && Date.now()-new Date(latest.at).getTime()<20_000;
+    const busy=Boolean(recently && (latest.title==='Comando recebido'||latest.title==='Site verificado'));
+    const label=$('#live-label-'+agent),bot=$('#live-bot-'+agent);
+    label.classList.toggle('busy',busy);label.classList.toggle('warning',!busy&&waiting>0);
+    bot.classList.toggle('busy',busy);
+    const small=label.querySelector('small');
+    if(state.mode==='demo'){small.textContent='Personagem animado · demonstração';}
+    else if(busy){small.textContent='Atualização registrada há instantes';}
+    else if(pendingApprovals>0&&agent==='atlas'){small.textContent=pendingApprovals+' aprovação(ões) pendente(s)';}
+    else if(waiting>0){small.textContent=waiting+' pedido(s) aguardando integração';}
+    else{small.textContent='Disponível · nenhum trabalho ativo';}
+  }
+  if(state.mode==='real'){
+    if(liveOffice.armed)for(const e of events.slice().reverse())if(!liveOffice.seen.has(e.id))addInAppPopup(e);
+    liveOffice.seen=new Set(events.map(x=>x.id));liveOffice.armed=true;
+  }
+}
+function renderSites(){
+  const list=$('#site-source-list'),checks=$('#site-check-list'),notice=$('#site-list-message');
+  if(!list||!checks)return;list.replaceChildren();checks.replaceChildren();
+  if(state.mode!=='real'){notice.textContent='Entre na conta titular para cadastrar fontes reais.';return;}
+  notice.textContent='Consultas em sites públicos não exigem sua senha. Sem execução automática de sites nesta etapa.';
+  for(const item of state.webSources||[]){
+    const actions=liveEl('div','office-row-actions');
+    const check=liveEl('button','office-mini','Consultar agora');check.type='button';check.disabled=!item.enabled;check.onclick=()=>checkSiteSource(item,check);
+    const pause=liveEl('button','office-mini',item.enabled?'Pausar':'Ativar');pause.type='button';pause.onclick=async()=>{try{await ensureSession();await api('atlas_web_sources',{method:'PATCH',query:'?id=eq.'+item.id,body:{enabled:!item.enabled}});await officeReload();}catch(e){alert(errorMessage(e));}};
+    const del=liveEl('button','office-mini','Excluir');del.type='button';del.onclick=async()=>{if(!confirm('Excluir a fonte '+item.name+'?'))return;try{await api('atlas_web_sources',{method:'DELETE',query:'?id=eq.'+item.id});await officeReload();}catch(e){alert(errorMessage(e));}};
+    actions.append(check,pause,del);
+    const row=officeRow(item.name,`${item.kind==='rss'?'RSS':'Página'} · ${item.agent==='atlas'?'Atlas':'Secretária AI'} · ${item.enabled?'Ativo':'Pausado'} · ${item.status==='alterado'?'Mudança detectada':item.status==='erro'?'Falha de consulta':item.last_checked_at?'Verificado':'Ainda não verificado'}`,actions);
+    const url=liveEl('a','',item.url);url.href=item.url;url.target='_blank';url.rel='noopener noreferrer';url.style.cssText='font-size:11px;color:#90bbed;word-break:break-all';row.firstChild.append(url);list.append(row);
+  }
+  if(!list.children.length)list.append(liveEl('p','office-help','Você ainda não cadastrou nenhum site.'));
+  for(const check of (state.webChecks||[]).slice(0,20))checks.append(officeRow(check.title||'Verificação',`${formatOfficeTime(check.checked_at)} · ${check.status} · ${check.details||''}`));
+  if(!checks.children.length)checks.append(liveEl('p','office-help','Nenhuma consulta registrada.'));
+}
+async function checkSiteSource(item,button){
+  button.disabled=true;button.textContent='Consultando...';
+  try{
+    await ensureSession();
+    const response=await fetch(SUPABASE_URL+'/functions/v1/atlas-site-check',{method:'POST',headers:{'content-type':'application/json','apikey':SUPABASE_PUBLIC_KEY,'authorization':'Bearer '+state.session.access_token},body:JSON.stringify({source_id:item.id})});
+    const data=await response.json().catch(()=>({error:'Resposta inválida do motor de consultas.'}));
+    await officeReload();
+    if(!response.ok)alert(data.error||data.details||'Consulta indisponível.');
+    else addInAppPopup({title:data.status==='alterado'?'Mudança detectada':'Site consultado',detail:item.name+': '+data.details});
+  }catch(e){alert('Não foi possível consultar: '+errorMessage(e));}
+  finally{button.disabled=false;button.textContent='Consultar agora';}
+}
+$('#site-source-form')?.addEventListener('submit',async e=>{
+  e.preventDefault();const out=$('#site-create-result'),btn=e.currentTarget.querySelector('[type=submit]');
+  if(state.mode!=='real'){out.textContent='Entre com sua conta titular.';return;}
+  const url=$('#site-url').value.trim();
+  try{const target=new URL(url);if(target.protocol!=='https:'||target.username||target.password||target.port||target.hash||/localhost|\.local$|\.internal$/i.test(target.hostname))throw Error('Informe uma página HTTPS pública, sem login.');}
+  catch(e){out.textContent='Endereço inválido. Utilize HTTPS público.';return;}
+  btn.disabled=true;out.textContent='Salvando site...';
+  try{
+    await ensureSession();
+    await api('atlas_web_sources',{method:'POST',body:{name:$('#site-name').value.trim(),url,agent:$('#site-agent').value,kind:$('#site-kind').value,frequency_minutes:Number($('#site-frequency').value),enabled:true}});
+    e.currentTarget.reset();await officeReload();out.textContent='Fonte cadastrada. Use “Consultar agora”. A rotina automática de sites não foi ativada.';
+  }catch(error){out.textContent='Falha: '+errorMessage(error);}finally{btn.disabled=false;}
+});
+let pollingBusy=false;
+async function pollOfficeData(){
+  if(document.hidden||state.mode!=='real'||pollingBusy)return;
+  pollingBusy=true;
+  try{await officeReload();}catch(e){const status=$('#office-stream-state');if(status)status.textContent='◷ Sem conexão; tente atualizar';}
+  finally{pollingBusy=false;}
+}
+// For simple mobile use, polling provides a reliable fallback without keeping
+// connections alive when the app is backgrounded.
+setInterval(pollOfficeData,15000);
+// Realtime may be unavailable on restricted browsers. Polling remains active.
+async function connectOfficeRealtime(){
+  if(state.mode!=='real'||liveOffice.subscription)return;
+  try{
+    const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+    if(state.mode!=='real'||!state.session?.access_token||!state.user?.id)return;
+    const realtimeClient=createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+    await realtimeClient.realtime.setAuth(state.session.access_token);
+    const names=['atlas_agent_commands','atlas_daily_executions','atlas_tasks','atlas_approvals','atlas_web_checks','atlas_web_sources'];
+    let channel=realtimeClient.channel('atlas-office-'+state.user.id);
+    for(const name of names)channel=channel.on('postgres_changes',{event:'*',schema:'public',table:name,filter:'user_id=eq.'+state.user.id},()=>{clearTimeout(liveOffice.reloadTimer);liveOffice.reloadTimer=setTimeout(pollOfficeData,700);});
+    channel.subscribe(status=>{const tag=$('#office-stream-state');if(tag)tag.textContent=status==='SUBSCRIBED'?'● Eventos em tempo real':status==='CHANNEL_ERROR'?'◷ Atualização a cada 15s':'◷ Conectando eventos';});
+    liveOffice.subscription=channel;
+  }catch(e){const tag=$('#office-stream-state');if(tag)tag.textContent='◷ Atualização a cada 15s';}
+}
+document.querySelectorAll('.nav-btn[data-page="sites"]').forEach(b=>b.addEventListener('click',()=>{if(state.mode==='real')pollOfficeData();}));
+initOfficeScene();renderLiveOffice();renderSites();
+
+</script>
 </body>
 </html>
