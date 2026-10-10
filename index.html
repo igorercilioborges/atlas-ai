@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080f1d" />
+  <meta name="description" content="Atlas AI: seu painel pessoal de tarefas, informações e organização." />
+  <title>Atlas AI 0.4 · Escritório Virtual</title>
+  <style>
+    :root {color-scheme:dark; --bg:#080f1d;--panel:#101e33;--panel2:#152943;--nav:#0a1628;--line:#283b56;--blue:#3b91fc;--blue2:#92c5ff;--white:#eef6ff;--muted:#90a8c5;--danger:#ff9eab;--green:#84ddc1}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--white)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}a{color:var(--blue2)}
+    .hidden,[hidden]{display:none!important}.auth-wrap{display:grid;place-items:center;min-height:100dvh;padding:24px;background:radial-gradient(circle at 50% 0%,#183864 0,transparent 55%),var(--bg)}.auth-card{width:min(420px,100%);padding:28px;background:#101e33;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 85px #0005}.logo-line{display:flex;align-items:center;gap:13px}.logo-icon{display:grid;place-items:center;width:47px;height:47px;background:linear-gradient(140deg,#237ef8,#123154);border-radius:14px;color:white;font-size:26px}.logo-text{font-size:24px;font-weight:820;letter-spacing:.17em}.sub{color:var(--muted);font-size:13px;line-height:1.6}.auth-card h2{font-size:24px;margin:32px 0 5px}.field{display:grid;gap:7px;margin:17px 0;font-size:12px;color:#c2d3e5}.field input,.field textarea,.field select{width:100%;padding:12px;border-radius:10px;border:1px solid #395475;background:#0a182c;color:white}.field textarea{resize:vertical}.btn{border:0;background:var(--blue);color:white;font-weight:700;padding:12px 17px;border-radius:10px}.btn:hover{background:#2879d9}.btn.alt{background:#203751;color:#cbdff7}.btn.ghost{background:transparent;border:1px solid #335071;color:#b9d6f7}.btn.small{padding:7px 10px;font-size:12px}.w-full{width:100%}.error{color:#ffd1d5;font-size:12px;line-height:1.6}.success{color:var(--green);font-size:12px;line-height:1.6}.auth-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:13px}.btn-link{border:0;background:none;color:var(--blue2);padding:8px 0;font-size:12px}.mini-note{background:#0c2138;border:1px solid #2a4666;border-radius:10px;padding:12px;color:#b8cbe2;font-size:12px;line-height:1.65;margin:16px 0}
+    .layout{min-height:100vh;display:flex}.side{width:245px;flex-shrink:0;background:var(--nav);border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100dvh}.side .logo-line{margin:0 8px 31px}.menu-title{color:#6f90b8;font-size:10px;letter-spacing:.14em;margin:20px 14px 12px;font-weight:800}.nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;margin-bottom:4px;color:#a9bfd9;background:transparent;border:0;text-align:left;border-radius:11px;font-weight:600}.nav-btn i{font-style:normal;width:23px;font-size:19px}.nav-btn.selected{color:white;background:#17416e;box-shadow:inset 3px 0 var(--blue)}.nav-btn:hover{color:white;background:#173352}.sidebar-footer{margin-top:auto;padding:16px 10px;border-top:1px solid var(--line)}.sidebar-footer b{display:block;font-size:12px}.sidebar-footer small{font-size:11px;color:var(--muted)}.main{min-width:0;flex:1}.topbar{padding:22px 34px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:center;justify-content:space-between}.topbar .eyebrow{margin:0}.topbar h1{margin:4px 0 0;font-size:21px}.topright{display:flex;align-items:center;gap:9px}.label{color:#9bcaff;font-size:11px;background:#132b47;border:1px solid #315a82;border-radius:30px;padding:7px 11px;white-space:nowrap}.content{padding:32px 34px 120px;max-width:1470px;margin:auto}.page{display:none}.page.selected{display:block}.eyebrow{font-size:10px;letter-spacing:.17em;font-weight:800;color:#6aabff}.heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.heading h2{font-size:clamp(24px,3.6vw,37px);letter-spacing:-.035em;margin:9px 0}.heading h2 em{color:var(--blue);font-style:normal}.heading p{margin:0;color:var(--muted);line-height:1.5;font-size:13px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}.panel h3{margin:0 0 15px;font-size:17px}.callout{display:flex;gap:12px;align-items:flex-start;border:1px solid #315c88;background:#112640;border-radius:12px;padding:14px 17px;color:#b8d6f9;font-size:13px;line-height:1.6;margin-bottom:20px}.callout b{color:white}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.stat strong{font-size:32px;display:block;margin-top:17px}.stat small{font-size:11px;color:var(--muted)}.stat .data-title{font-size:12px;color:#afc5dd;display:flex;justify-content:space-between}.stat .data-title span{color:#7bb9ff}.columns{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.listrow{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line)}.listrow:first-child{border-top:0}.rowmeta{font-size:11px;color:var(--muted);margin-top:5px}.listrow b{font-size:13px}.pill{display:inline-block;padding:5px 9px;border-radius:50px;font-size:10px;background:#24405f;color:#abcff4;white-space:nowrap}.pill.alta,.pill.critica{background:#57362f;color:#ffb5a5}.pill.baixa{background:#1c3f3b;color:#9fe7d1}.muted{color:var(--muted)}.filters{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}.filters select{padding:9px;border:1px solid #355171;background:var(--panel);color:white;border-radius:10px;min-width:150px}.task-title{font-size:13px;display:block}.check{width:19px;height:19px;accent-color:var(--blue)}.task-done .task-title{text-decoration:line-through;color:#8193a8}.empty{padding:50px 20px;text-align:center;color:var(--muted);line-height:1.5}.empty h3{color:white}.control{display:flex;align-items:center;gap:9px}.icon-btn{border:1px solid #37506d;border-radius:9px;background:#1a2d47;color:#b8d6ed;padding:7px 11px}.danger{color:var(--danger)}.text-note{font-size:12px;color:var(--muted);line-height:1.7}.empty-icon{font-size:34px}
+    dialog{border:1px solid #3a5577;background:#13243a;border-radius:17px;color:white;padding:24px;width:min(510px,calc(100vw - 28px));box-shadow:0 25px 85px #0009}dialog::backdrop{background:#000b}dialog h3{margin:0 0 18px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}.fab{position:fixed;right:24px;bottom:22px;border-radius:30px;background:#237fe9;color:white;padding:14px 18px;box-shadow:0 10px 30px #0c6df056;border:0;font-weight:750}.chat-popup{position:fixed;right:24px;bottom:83px;width:min(380px,calc(100vw - 28px));height:430px;background:#10213a;border:1px solid #406084;border-radius:16px;box-shadow:0 15px 65px #0009;display:flex;flex-direction:column;overflow:hidden}.chat-head{display:flex;align-items:center;justify-content:space-between;background:#173b63;padding:15px 17px;font-weight:700}.chat-messages{flex:1;overflow-y:auto;padding:18px}.bubble{background:#1f3b5c;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-bottom:13px}.bubble.mine{background:#1c61af;margin-left:45px}.chat-input{display:flex;gap:6px;border-top:1px solid #365171;padding:10px}.chat-input input{min-width:0;flex:1;padding:10px;border:1px solid #3a5876;border-radius:9px;background:#0a192c;color:white}.menu-toggle{display:none;border:0;background:transparent;color:white;font-size:22px}#overlay{position:fixed;inset:0;background:#000a;z-index:45}.side{z-index:50}.mobile-note{font-size:12px;color:var(--muted)}
+    @media(max-width:1040px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}@media(max-width:750px){.side{position:fixed;left:0;top:0;transform:translateX(-110%);transition:transform .2s;width:255px}.side.open{transform:translateX(0)}.menu-toggle{display:block}.topbar{padding:19px}.content{padding:25px 16px 100px}.panel{padding:17px}.stats{gap:10px}.stat strong{font-size:27px}.heading{align-items:flex-start;flex-direction:column}.fab{right:15px;bottom:15px}.chat-popup{right:13px;bottom:76px}.topbar h1{font-size:18px}}
+
+    /* Escritorio virtual - interface visual 2D responsiva, sem dependencias */
+    .office-heading{margin-bottom:22px}.office-heading .eyebrow{font-size:10px}.office-heading h2{font-size:clamp(25px,3.5vw,38px);margin:7px 0;letter-spacing:-.035em}.office-heading p{color:var(--muted);font-size:13px;line-height:1.6;max-width:670px}
+    .office-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.office-metric{background:#111f34;border:1px solid #294364;padding:16px 18px;border-radius:13px}.office-metric small{color:#91a8c5;display:block;font-size:11px}.office-metric b{font-size:21px;margin-top:8px;display:block}
+    .office-stage{background:linear-gradient(180deg,#111d36,#0a172b);border:1px solid #304562;border-radius:21px;overflow:hidden;box-shadow:inset 0 1px #7995bc18,0 20px 70px #0002;position:relative}
+    .office-stage-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 18px 12px;border-bottom:1px solid #243650}.office-stage-top b{font-size:13px}.office-stage-top small{color:#7fa4c9;font-size:11px}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#547ca4;margin-right:7px;box-shadow:0 0 0 3px #203d57}
+    .office-scroller{overflow-x:auto;overflow-y:hidden;scrollbar-color:#41628a transparent;scrollbar-width:thin;position:relative}.office-scene{width:100%;min-width:680px;height:auto;display:block}
+    .office-canvas{position:relative;width:max(100%,680px)}.office-hint{display:none;color:#88a9ce;font-size:11px;padding:6px 16px 14px}.scene-hotspot{position:absolute;z-index:2;border:1px solid #75b8ff66;background:#081f3ed9;color:#e7f5ff;border-radius:99px;padding:7px 12px;box-shadow:0 5px 25px #0006;font-size:12px;font-weight:700;white-space:nowrap;backdrop-filter:blur(5px)}.scene-hotspot:hover{background:#21558e}.scene-atlas{left:28%;top:66%}.scene-secretaria{left:66%;top:66%}
+    .atlas-robot-float{animation:floatbot 3.4s ease-in-out infinite;transform-origin:center}.secretaria-robot-float{animation:floatbot 3.1s ease-in-out -1s infinite;transform-origin:center}.screen-glow{animation:screenpulse 3.5s ease-in-out infinite}@keyframes floatbot{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}@keyframes screenpulse{0%,100%{opacity:.63}50%{opacity:1}}@media(prefers-reduced-motion:reduce){.atlas-robot-float,.secretaria-robot-float,.screen-glow{animation:none!important}}
+    .office-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:18px 0}.office-agent-card{border:1px solid #2b4362;border-radius:15px;padding:18px;background:linear-gradient(145deg,#152740,#101c30);text-align:left;display:flex;gap:14px;align-items:center;width:100%;color:inherit;transition:border-color .18s,transform .18s}.office-agent-card:hover{border-color:#6baeff;transform:translateY(-2px)}.office-avatar{width:62px;height:65px;display:grid;place-items:center;flex-shrink:0;border:1px solid #376394;background:radial-gradient(circle at 50% 15%,#25548a,#101b30);border-radius:18px}.office-avatar svg{width:49px;height:55px}.office-card-content{flex:1;min-width:0}.office-card-content h3{font-size:17px;margin:0 0 5px}.office-card-content p{font-size:12px;color:#94b3d4;margin:0 0 10px}.office-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.office-agent-status{padding:5px 9px;color:#bed9ef;background:#233952;border:1px solid #375474;border-radius:99px;font-size:10px}.office-agent-status.sim-working{color:#9aebfe;background:#114655;border-color:#2b8190}.office-agent-status.sim-approval{color:#ffdfb1;background:#543f24;border-color:#9b7040}.office-agent-status.sim-done{color:#a2f3d1;background:#124d3e;border-color:#237d5e}.office-arrow{color:#79b7ff;font-size:21px}
+    .office-feed{padding:19px;border:1px solid #2a415e;background:#101e32;border-radius:15px}.office-feed h3{font-size:15px;margin:0 0 11px}.feedrow{display:flex;align-items:start;gap:10px;padding:12px 0;border-top:1px solid #2c405a}.feedrow:first-of-type{border:0}.feedicon{flex-shrink:0;background:#233f64;width:29px;height:29px;display:grid;place-items:center;border-radius:9px;color:#8fccff}.feedrow b{font-size:12px;display:block}.feedrow small{color:#91a9c3;font-size:11px;display:block;margin-top:4px;line-height:1.5}
+    .agent-back{background:transparent;border:0;color:#8ec5ff;padding:8px 0;font-size:12px;margin-bottom:16px}.agent-header{display:flex;align-items:center;gap:16px;margin-bottom:23px}.agent-header .office-avatar{height:87px;width:87px}.agent-header .office-avatar svg{width:65px;height:72px}.agent-header .eyebrow{margin-bottom:5px}.agent-header h2{margin:0 0 7px;font-size:clamp(25px,3vw,35px)}.agent-header p{margin:0;color:var(--muted);font-size:13px}.agent-detail-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:17px}.agent-detail-grid .panel{min-height:170px}.agent-detail-grid p{color:#98b2ce;font-size:13px;line-height:1.7}.agent-feature{display:flex;gap:11px;padding:12px 0;border-top:1px solid #2c3f5b;color:#d5e4f6;font-size:12px}.agent-feature span{color:#83c4fb}.agent-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.agent-limits{border:1px solid #31577d;border-radius:12px;padding:15px;background:#102941;color:#b6d6f3;font-size:12px;line-height:1.65;margin:15px 0}.agent-demo-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px;border:1px solid #2b4c72;background:#122943;border-radius:13px;margin-bottom:16px}.agent-demo-controls label{color:#aac9e6;font-size:12px}.agent-demo-controls select{padding:10px;background:#0e2038;border:1px solid #3b6386;color:#fff;border-radius:10px}.agent-demo-controls[hidden]{display:none}
+    @media(max-width:900px){.agent-detail-grid{grid-template-columns:1fr}}
+    @media(max-width:750px){.office-metrics{grid-template-columns:repeat(3,1fr);gap:7px}.office-metric{padding:12px 10px}.office-metric b{font-size:18px}.office-metric small{font-size:10px}.office-stage-top{padding:12px}.office-agent-grid{grid-template-columns:1fr;gap:10px}.office-agent-card{padding:14px}.office-hint{display:block}.scene-hotspot{font-size:11px;padding:6px 9px}.agent-header .office-avatar{width:69px;height:72px}.agent-header .office-avatar svg{width:50px;height:59px}}
+  
+/* Escritório 0.4: referencial visual aprovado + centro de comandos operacional */
+.office-reference {position:relative;background:#070e1b;overflow:hidden}
+.office-reference img{display:block;width:100%;height:auto;object-fit:cover}
+.office-reference-label{position:absolute;bottom:10px;left:12px;background:#081726eb;border:1px solid #4d7294;color:#dbecff;border-radius:9px;font-size:11px;padding:8px 12px;max-width:calc(100% - 24px)}
+#page-escritorio .office-scroller, #page-escritorio .office-hint{display:none}
+.office-operation{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin:20px 0}
+.office-operation .panel{margin:0;min-width:0}
+.office-operation h3,.office-control h3{margin:0 0 10px;font-size:17px}
+.office-help{font-size:12px;line-height:1.6;color:#9fb8d6;margin:0 0 13px}
+.office-form{display:grid;gap:12px}.office-form label{color:#b2cbe9;font-size:12px;display:grid;gap:5px}
+.office-form input,.office-form select,.office-form textarea{width:100%;background:#0b192c;border:1px solid #426186;color:#eff6ff;border-radius:9px;padding:11px;max-width:100%;box-sizing:border-box}
+.office-form textarea{resize:vertical;min-height:80px}.office-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.office-result{font-size:12px;color:#a8c6ea;min-height:1.3em;line-height:1.6}.office-listrow{padding:13px 0;border-top:1px solid #2c4059;display:flex;gap:12px;align-items:start;justify-content:space-between}
+.office-listrow b{font-size:12px}.office-listrow small{display:block;color:#90a9c7;font-size:11px;margin-top:6px;line-height:1.5}
+.office-row-actions{display:flex;gap:8px;align-items:center}.office-mini{background:#263c57;border:1px solid #476485;color:#cbe1f9;padding:7px 9px;border-radius:7px;font-size:11px}
+.office-pill{padding:4px 7px;border-radius:30px;background:#223f57;color:#a8ccfa;font-size:10px}
+.office-panel-note{background:#122c48;border:1px solid #39628c;border-radius:11px;padding:10px 13px;font-size:12px;line-height:1.6;color:#bad9f7;margin:14px 0}
+.office-list{max-height:360px;overflow:auto}
+@media(max-width:900px){.office-operation{grid-template-columns:1fr}.office-reference-label{font-size:10px}.office-form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.office-reference{overflow-x:auto;scrollbar-color:#5683ac #0b192c}.office-reference img{width:700px;max-width:none;transform:none}.office-reference-label{position:sticky;left:10px;bottom:9px;width:max-content;font-size:10px}.office-form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <section id="auth-screen" class="auth-wrap">
+    <div class="auth-card">
+      <div class="logo-line"><div class="logo-icon">✦</div><div><div class="logo-text">ATLAS</div><div class="sub">Assistente pessoal inteligente</div></div></div>
+      <h2 id="auth-title">Entre no seu Atlas</h2><p class="sub">Seu espaço pessoal, com informações protegidas.</p>
+      <form id="auth-form">
+        <label class="field">E-mail<input id="email" autocomplete="email" type="email" required /></label>
+        <label class="field">Senha<input id="password" autocomplete="current-password" type="password" minlength="6" required /></label>
+        <button class="btn w-full" id="auth-submit">Entrar</button>
+      </form>
+      <p id="auth-message" role="status" class="sub"></p>
+      <div class="auth-actions"><button class="btn-link" id="toggle-signup" type="button">Criar minha conta</button><button class="btn-link" type="button" id="toggle-recover">Recuperar senha</button></div>
+      <button class="btn ghost w-full" id="demo-button">Visualizar demonstração</button>
+      <div class="mini-note">O acesso real exige autenticação e liberação da conta titular. A demonstração não salva informações nem acessa seu Gmail ou Drive.</div>
+    </div>
+  </section>
+  <div id="app" class="layout hidden">
+    <aside id="sidebar" class="side">
+      <div class="logo-line"><div class="logo-icon">✦</div><div><div class="logo-text">ATLAS</div><div class="sub">Assistente pessoal</div></div></div>
+      <div class="menu-title">PRINCIPAL</div>
+      <nav aria-label="Menu principal">
+        <button class="nav-btn selected" data-page="inicio"><i>◈</i> Visão geral</button>
+        <button class="nav-btn" data-page="escritorio"><i>⌘</i> Escritório Virtual</button>
+        <button class="nav-btn" data-page="tarefas"><i>☑</i> Minhas tarefas</button>
+        <button class="nav-btn" data-page="emails"><i>✉</i> E-mails</button>
+        <button class="nav-btn" data-page="documentos"><i>▤</i> Documentos</button>
+        <button class="nav-btn" data-page="memoria"><i>◉</i> Memória</button>
+        <button class="nav-btn" data-page="config"><i>⚙</i> Configurações</button>
+      </nav>
+      <div class="sidebar-footer"><b id="account-label">Atlas</b><small id="mode-label">Modo demonstração</small><div style="margin-top:15px"><button class="btn alt small" id="exit-button">Sair</button></div></div>
+    </aside>
+    <div id="overlay" hidden></div>
+    <section class="main">
+      <header class="topbar"><div class="control"><button class="menu-toggle" id="menu-open" aria-label="Abrir menu">☰</button><div><div class="eyebrow">PAINEL ATLAS</div><h1 id="page-title">Visão geral</h1></div></div><span id="app-mode" class="label">Demonstração</span></header>
+      <main class="content">
+        <section class="page selected" id="page-inicio">
+          <div class="heading"><div><div class="eyebrow">SEU ESPAÇO INTELIGENTE</div><h2>Seu dia, sob controle<em>.</em></h2><p>Organize seu dia e acompanhe o que realmente importa.</p></div><button class="btn add-task">+ Nova tarefa</button></div>
+          <div class="callout"><div>ⓘ</div><div id="main-callout">Visualização demonstrativa: todas as tarefas são fictícias e não ficam salvas. Não insira dados pessoais nesta prévia.</div></div>
+          <div class="stats"><article class="panel stat"><div class="data-title">Tarefas pendentes <span>▥</span></div><strong id="stat-pending">0</strong><small>Para organizar</small></article><article class="panel stat"><div class="data-title">Prioridade alta <span>⚡</span></div><strong id="stat-high">0</strong><small>Exigem atenção</small></article><article class="panel stat"><div class="data-title">Concluídas <span>✓</span></div><strong id="stat-done">0</strong><small>Seu progresso</small></article><article class="panel stat"><div class="data-title">Próximos prazos <span>◷</span></div><strong id="stat-due">0</strong><small>Próximos 7 dias</small></article></div>
+          <div class="columns"><div class="panel"><h3>Prioridades</h3><div id="priority-list"></div></div><div class="panel"><h3>Central de informações</h3><div class="listrow"><div><b>✉ Gmail</b><div class="rowmeta">Integração própria do site não configurada</div></div><span class="pill">Pendente</span></div><div class="listrow"><div><b>▤ Google Drive</b><div class="rowmeta">Integração própria do site não configurada</div></div><span class="pill">Pendente</span></div><div class="listrow"><div><b>◉ Memória e IA</b><div class="rowmeta">Modelo de IA ainda não conectado</div></div><span class="pill">Pendente</span></div></div></div>
+        </section>
+
+         <section class="page" id="page-escritorio">
+            <div class="office-heading"><div class="eyebrow">CENTRAL DE AGENTES · VISÃO ISOMÉTRICA 2D</div><h2>Escritório Virtual<span style="color:var(--blue)">.</span></h2><p>Envie comandos diretamente aos seus agentes e programe rotinas diárias. A cena é ilustrativa; os registros operacionais vêm do Supabase.</p></div>
+            <div class="office-metrics"><div class="office-metric"><small>Agentes do escritório</small><b>02</b></div><div class="office-metric"><small>Comandos registrados</small><b id="office-metric-commands">00</b></div><div class="office-metric"><small>Rotinas ativas</small><b id="office-metric-routines">00</b></div></div>
+            <section class="office-stage" aria-label="Cena ilustrada do escritório virtual">
+              <div class="office-stage-top"><b><span class="live-dot"></span> ATLAS / Escritório</b><small id="office-scene-mode">Visualização demonstrativa</small></div><div class="office-reference"><img src="escritorio-atlas.webp" alt="Ilustração isométrica em pixel art do escritório futurista Atlas, com os robôs Atlas e Secretária AI em estações de trabalho" loading="lazy"/><div class="office-reference-label">ARTE CONCEITUAL · Os painéis ilustrados não mostram atividades reais. Consulte o estado operacional abaixo.</div></div>
+              <div class="office-scroller"><div class="office-canvas">
+<svg class="office-scene" viewBox="0 0 1040 535" role="img" aria-labelledby="scene-title scene-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="scene-title">Escritório virtual corporativo do Atlas</title>
+<desc id="scene-desc">Cena ilustrada em perspectiva isométrica leve, com dois robôs profissionais: Atlas à esquerda e Secretária AI à direita, cada um em sua estação de trabalho.</desc>
+<defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1b3557"/><stop offset="1" stop-color="#101c35"/></linearGradient>
+  <linearGradient id="floor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#183150"/><stop offset="1" stop-color="#0b1c30"/></linearGradient>
+  <linearGradient id="desk" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6283a8"/><stop offset="1" stop-color="#2b486d"/></linearGradient>
+  <linearGradient id="robot" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b0d0f5"/><stop offset="1" stop-color="#5677a4"/></linearGradient>
+  <linearGradient id="robot2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e2f0ff"/><stop offset="1" stop-color="#8bacc8"/></linearGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25558d"/><stop offset="1" stop-color="#101e34"/></linearGradient>
+  <pattern id="floorgrid" width="45" height="45" patternUnits="userSpaceOnUse" patternTransform="skewX(-27) scale(1 .7)"><path d="M 45 0 L 0 0 0 45" stroke="#5d8fbb" stroke-opacity=".13" stroke-width="1" fill="none"/></pattern>
+  <filter id="glow"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<!-- Sala e vista isometrica -->
+<rect x="0" y="0" width="1040" height="535" fill="#0e1d33"/>
+<path d="M0 0H1040V215L520 315 0 215Z" fill="url(#wall)"/>
+<path d="M0 215L520 315 1040 215V535H0Z" fill="url(#floor)"/>
+<path d="M0 215L520 315 1040 215" fill="none" stroke="#4d769e" stroke-width="2" opacity=".65"/>
+<path d="M0 215L520 315 1040 215V535H0Z" fill="url(#floorgrid)" opacity=".8"/>
+<path d="M0 0V215L520 315V100Z" fill="#142744" fill-opacity=".26"/>
+<path d="M1040 0V215L520 315V100Z" fill="#142542" fill-opacity=".23"/>
+<!-- Luminarias -->
+<path d="M65 37 263 75 263 90 65 52Z" fill="#4187cc" opacity=".25"/>
+<path d="M742 70 948 32 948 48 742 85Z" fill="#4187cc" opacity=".25"/>
+<path d="M97 49 245 78" stroke="#90ceff" stroke-width="3" opacity=".7"/>
+<path d="M766 79 921 48" stroke="#90ceff" stroke-width="3" opacity=".7"/>
+<!-- Painel analitico Atlas -->
+<g transform="translate(315 48) skewY(5)"><rect width="245" height="142" rx="13" fill="#09192d" stroke="#407caf" stroke-width="2"/><rect x="11" y="11" width="223" height="120" rx="7" fill="#112a47"/><text x="25" y="34" font-size="13" font-family="Arial,sans-serif" font-weight="700" fill="#bce7ff">ATLAS  /  CENTRAL</text><path d="M25 61h95" stroke="#518ebf" stroke-width="4" stroke-linecap="round"/><path d="M25 77h140" stroke="#3d6990" stroke-width="4" stroke-linecap="round"/><path d="M25 92h71" stroke="#3d6990" stroke-width="4" stroke-linecap="round"/><rect x="175" y="54" width="38" height="48" rx="6" fill="#19466c"/><path d="M183 89l9-12 7 4 8-18" stroke="#72d8f4" stroke-width="3" fill="none"/><circle cx="207" cy="63" r="3" fill="#81edff"/></g>
+<!-- Quadro calendario da secretaria -->
+<g transform="translate(695 95) skewY(-7)"><rect width="200" height="130" rx="12" fill="#0a1c30" stroke="#416f98" stroke-width="2"/><rect x="11" y="11" width="178" height="108" rx="7" fill="#142e48"/><text x="25" y="34" fill="#bbf4ee" font-size="13" font-weight="700" font-family="Arial,sans-serif">AGENDA / E-MAILS</text><g stroke="#5b8aaa" stroke-width="1"><path d="M26 46h144M26 66h144M26 86h144M67 46v58M110 46v58M151 46v58"/></g><rect x="68" y="68" width="40" height="17" rx="3" fill="#3d918e" opacity=".7"/><circle cx="47" cy="56" r="4" fill="#62dbd6"/></g>
+<!-- Biombo de vidro e plantas -->
+<path d="M563 150 596 159v131l-33-8z" fill="#88b6ce" fill-opacity=".075" stroke="#5d90b4" stroke-opacity=".25"/>
+<g transform="translate(64 236)"><path d="M0 58 23 68 46 58 43 94 23 106 3 94Z" fill="#325879"/><path d="M22 57V9M22 49 3 27M22 47 43 20M22 35 8 7M22 24 35 2" stroke="#43a698" stroke-width="7" stroke-linecap="round"/><path d="M22 29 2 10M22 39 39 14" stroke="#73b3ad" stroke-width="4" stroke-linecap="round"/></g>
+<g transform="translate(944 262)"><path d="M0 46 22 57 44 46 41 82 22 95 3 82Z" fill="#355574"/><path d="M22 45V0M22 27 9 13M22 24 34 11M22 38 3 28" stroke="#3e988c" stroke-width="7" stroke-linecap="round"/></g>
+<!-- Sombras das estacoes -->
+<ellipse cx="325" cy="438" rx="231" ry="58" fill="#040e1f" opacity=".32"/>
+<ellipse cx="759" cy="430" rx="202" ry="58" fill="#040e1f" opacity=".3"/>
+<!-- Cadeiras de trabalho -->
+<g opacity=".9"><rect x="208" y="294" width="112" height="107" rx="27" fill="#213b5a" stroke="#39638c" stroke-width="3"/><rect x="705" y="291" width="109" height="107" rx="29" fill="#24455f" stroke="#416c8c" stroke-width="3"/></g>
+<!-- Robo Atlas -->
+<g class="atlas-robot-float">
+<path d="M241 295Q241 272 265 269H314Q338 270 340 297L354 378Q292 409 224 376Z" fill="url(#robot)" stroke="#9ab8d9" stroke-width="3"/>
+<path d="M248 313Q291 328 334 313V373Q291 394 242 373Z" fill="#294a74"/><path d="M268 350H311" stroke="#6ad6ff" stroke-width="4" stroke-linecap="round"/><circle cx="291" cy="332" r="9" fill="#46a6fd" opacity=".8"/><circle cx="291" cy="332" r="4" fill="#d8f8ff"/>
+<rect x="245" y="199" width="91" height="105" rx="30" fill="url(#robot)" stroke="#c3d8f4" stroke-width="3"/><rect x="255" y="220" width="71" height="59" rx="21" fill="#0c233e" stroke="#4b8abb" stroke-width="2"/>
+<rect x="266" y="242" width="21" height="9" rx="4.5" fill="#81daff"/><rect x="295" y="242" width="21" height="9" rx="4.5" fill="#81daff"/><path d="M279 263Q291 270 304 263" fill="none" stroke="#5cc5ef" stroke-width="3" stroke-linecap="round"/>
+<rect x="286" y="183" width="8" height="20" rx="3" fill="#8dacd0"/><circle cx="290" cy="181" r="7" fill="#51c7ff"/><circle cx="290" cy="181" r="13" fill="#51c7ff" opacity=".27"/>
+<path d="M231 312 193 352 208 376 258 345" fill="#769dc7" stroke="#aec7e0" stroke-width="3"/><path d="M348 314 382 357 360 377 317 342" fill="#769dc7" stroke="#aec7e0" stroke-width="3"/>
+<circle cx="204" cy="365" r="13" fill="#a2bddb"/><circle cx="369" cy="366" r="13" fill="#a2bddb"/>
+</g>
+<!-- Robo secretaria -->
+<g class="secretaria-robot-float">
+<path d="M697 295Q700 273 727 270H775Q803 270 807 297L816 374Q756 406 685 371Z" fill="url(#robot2)" stroke="#d6e8f4" stroke-width="3"/>
+<path d="M703 316Q752 332 799 316V372Q754 394 698 368Z" fill="#345576"/><path d="M728 350H777" stroke="#72f1df" stroke-width="4"/><circle cx="752" cy="332" r="10" fill="#57dacf" opacity=".8"/><circle cx="752" cy="332" r="5" fill="#d2fff5"/>
+<rect x="703" y="201" width="99" height="103" rx="35" fill="url(#robot2)" stroke="#e2f5ff" stroke-width="3"/><rect x="712" y="222" width="81" height="57" rx="22" fill="#0c233e" stroke="#579aa6" stroke-width="2"/>
+<path d="M722 245q12-14 25 0M758 245q12-14 25 0" stroke="#82eee4" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M745 265q8 6 17 0" stroke="#6bd9d5" stroke-width="3" stroke-linecap="round" fill="none"/>
+<rect x="750" y="183" width="7" height="19" rx="3" fill="#b2cfdf"/><circle cx="754" cy="181" r="7" fill="#6debd9"/>
+<path d="M695 313 664 353 682 374 726 343" fill="#8caccb" stroke="#d2e6f4" stroke-width="3"/><path d="M804 314 836 349 819 372 775 344" fill="#8caccb" stroke="#d2e6f4" stroke-width="3"/>
+<circle cx="672" cy="364" r="12" fill="#b2cce3"/><circle cx="825" cy="360" r="12" fill="#b2cce3"/>
+</g>
+<!-- Mesas em perspectiva, na frente dos robos -->
+<g><path d="M126 373 328 334 506 388 304 441Z" fill="url(#desk)" stroke="#81a9ca" stroke-width="3"/><path d="M126 373 304 441V467L126 404Z" fill="#203753"/><path d="M304 441 506 388V414L304 467Z" fill="#284868"/><path d="M145 393 303 443" stroke="#5684a9" stroke-width="2" opacity=".6"/><path d="M430 407V478" stroke="#416080" stroke-width="11"/></g>
+<g><path d="M581 382 753 336 936 382 755 438Z" fill="url(#desk)" stroke="#91b1c4" stroke-width="3"/><path d="M581 382 755 438V463L581 410Z" fill="#243b56"/><path d="M755 438 936 382V411L755 463Z" fill="#2b4962"/><path d="M618 409V479" stroke="#436b81" stroke-width="11"/></g>
+<!-- Computadores -->
+<g transform="translate(230 337)"><path d="M0 0 80-16 141 3 61 21Z" fill="#061426"/><path d="M-4-87 89-99 96-11 3 0Z" fill="#223d5a" stroke="#8bb7d9" stroke-width="3"/><path d="M3-81 83-92 88-18 8-9Z" fill="url(#screen)"/><path class="screen-glow" d="M16-62 54-67M18-48 73-56M21-33 48-38" stroke="#60c8fa" stroke-width="4"/><path d="M45-7 63 12" stroke="#567b9b" stroke-width="5"/></g>
+<g transform="translate(702 343)"><path d="M0 0 77-15 130 0 48 21Z" fill="#081629"/><path d="M-3-86 80-96 87-10 4 1Z" fill="#29475e" stroke="#add0e2" stroke-width="3"/><path d="M4-79 73-88 81-18 11-9Z" fill="url(#screen)"/><path class="screen-glow" d="M15-59 55-66M18-44 63-50M22-30 51-33" stroke="#70e6d7" stroke-width="4"/><path d="M44-7 59 10" stroke="#789eac" stroke-width="5"/></g>
+<!-- Laptops, documentos e indicacoes decorativas -->
+<path d="M338 384 383 375 411 385 365 394Z" fill="#0d2037" stroke="#6a9fc5"/><path d="M824 389 855 383 882 391 850 401Z" fill="#0b2033" stroke="#68aaa9"/>
+<g opacity=".6"><circle cx="533" cy="402" r="3" fill="#74daff"/><circle cx="549" cy="410" r="2" fill="#74daff"/><circle cx="565" cy="416" r="2" fill="#74daff"/></g>
+<text x="28" y="504" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" fill="#6590bc">ATLAS AI  /  DIGITAL OFFICE</text>
+<text x="1008" y="504" text-anchor="end" font-family="Arial,sans-serif" font-size="11" fill="#638eaf">V 0.3 · PREVIEW</text>
+</svg>
+<button class="scene-hotspot scene-atlas" type="button" data-agent="atlas">Atlas ↗</button><button class="scene-hotspot scene-secretaria" type="button" data-agent="secretaria">Secretária AI ↗</button></div></div>
+              <div class="office-hint">← Deslize para explorar a sala →</div>
+            </section>
+
+<div class="office-panel-note" id="office-data-info">Somente comandos e rotinas registrados no Atlas são dados operacionais. O processamento por IA e Gmail/Drive ainda depende de conexão autorizada.</div>
+<div class="office-operation" id="office-operation">
+  <section class="panel office-control"><h3>⌘ Dar comando ao escritório</h3><p class="office-help">Escolha o agente e diga o que precisa. A ação “Criar tarefa” funciona no banco; pedidos livres ficam aguardando o motor de IA.</p>
+    <form id="office-command-form" class="office-form">
+      <div class="office-form-grid"><label>Responsável<select id="office-command-agent"><option value="atlas">Atlas</option><option value="secretaria">Secretária AI</option></select></label><label>Tipo de comando<select id="office-command-kind"><option value="criar_tarefa">Criar tarefa (ativo)</option><option value="pedido_livre">Solicitar análise (aguarda IA)</option><option value="solicitar_resumo">Resumo de e-mails (aguarda Google)</option></select></label></div>
+      <label>Seu comando<textarea id="office-command-text" maxlength="2000" required placeholder="Ex.: Conferir pendências financeiras da semana"></textarea></label>
+      <div class="office-form-grid"><label>Área<select id="office-command-area"><option value="pessoal">Pessoal</option><option value="profissional">Profissional</option><option value="a_classificar">A classificar</option></select></label><label>Prioridade<select id="office-command-priority"><option value="media">Média</option><option value="alta">Alta</option><option value="critica">Crítica</option><option value="baixa">Baixa</option></select></label></div>
+      <button class="btn" type="submit">Enviar comando ao agente</button><div id="office-command-result" class="office-result" role="status"></div>
+    </form>
+  </section>
+  <section class="panel office-control"><h3>◷ Criar tarefa fixa diária</h3><p class="office-help">Programe uma tarefa todos os dias. Horário de Brasília (São Paulo). O sistema evita duplicar a mesma tarefa no dia.</p>
+    <form id="office-routine-form" class="office-form">
+      <label>Nome da rotina<input id="office-routine-title" maxlength="160" required placeholder="Ex.: Conferir as contas do dia" /></label>
+      <label>Instrução<textarea id="office-routine-instruction" maxlength="2000" required placeholder="Descreva exatamente o que precisa ser feito."></textarea></label>
+      <div class="office-form-grid"><label>Agente<select id="office-routine-agent"><option value="atlas">Atlas</option><option value="secretaria">Secretária AI</option></select></label><label>Horário diário<input id="office-routine-time" type="time" value="08:00" required /></label></div>
+      <div class="office-form-grid"><label>Ação<select id="office-routine-type"><option value="criar_tarefa">Criar tarefa diária (ativo)</option><option value="solicitar_analise">Solicitar trabalho de IA (pendente)</option></select></label><label>Área<select id="office-routine-area"><option value="pessoal">Pessoal</option><option value="profissional">Profissional</option><option value="a_classificar">A classificar</option></select></label></div>
+      <div class="office-form-grid"><label>Prioridade<select id="office-routine-priority"><option value="media">Média</option><option value="alta">Alta</option><option value="baixa">Baixa</option><option value="critica">Crítica</option></select></label><div></div></div>
+      <button class="btn" type="submit">Salvar rotina diária</button><div id="office-routine-result" class="office-result" role="status"></div>
+    </form>
+  </section>
+</div>
+<div class="office-operation"><section class="panel"><h3>Rotinas programadas</h3><p class="office-help">Ative, pause ou exclua suas tarefas fixas.</p><div class="office-list" id="office-routine-list"></div></section><section class="panel"><h3>Histórico de comandos</h3><p class="office-help">Execução confirmada somente quando registrada no sistema.</p><div class="office-list" id="office-command-list"></div></section></div>
+            <div class="office-agent-grid">
+              <button class="office-agent-card" type="button" data-agent="atlas"><span class="office-avatar"><svg viewBox="0 0 60 70" aria-hidden="true"><rect x="17" y="40" width="26" height="23" rx="9" fill="#335d8f"/><rect x="9" y="11" width="42" height="37" rx="14" fill="#809dbf"/><rect x="14" y="16" width="32" height="26" rx="10" fill="#102139"/><circle cx="22" cy="29" r="4" fill="#79c4ff"/><circle cx="38" cy="29" r="4" fill="#79c4ff"/><path d="M24 38h12" stroke="#439bf6" stroke-width="2" stroke-linecap="round"/><rect x="28" y="4" width="4" height="9" rx="2" fill="#9dbad8"/><circle cx="30" cy="4" r="3" fill="#63d5ff"/><path d="M23 53h14" stroke="#74ceff" stroke-width="2"/></svg></span><span class="office-card-content"><h3>Atlas</h3><p>Coordenador geral · organização e prioridades</p><span class="office-meta"><span id="status-card-atlas" class="office-agent-status">Integração pendente</span><span class="pill">Abrir agente</span></span></span><span class="office-arrow" aria-hidden="true">↗</span></button>
+              <button class="office-agent-card" type="button" data-agent="secretaria"><span class="office-avatar"><svg viewBox="0 0 60 70" aria-hidden="true"><rect x="16" y="40" width="28" height="22" rx="10" fill="#4d6588"/><rect x="8" y="11" width="44" height="37" rx="17" fill="#c3d3e9"/><rect x="13" y="17" width="34" height="25" rx="11" fill="#122239"/><path d="M19 29q4-6 8 0M33 29q4-6 8 0" stroke="#8ae0ec" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M27 36q3 3 6 0" stroke="#6bdfe7" stroke-width="2" stroke-linecap="round" fill="none"/><rect x="28" y="5" width="4" height="8" rx="2" fill="#bbcce0"/><circle cx="30" cy="5" r="3" fill="#66e5d6"/><path d="M21 52h18" stroke="#87eadb" stroke-width="2"/></svg></span><span class="office-card-content"><h3>Secretária AI</h3><p>Assistente executiva · e-mails e agenda</p><span class="office-meta"><span id="status-card-secretaria" class="office-agent-status">Integração pendente</span><span class="pill">Abrir agente</span></span></span><span class="office-arrow" aria-hidden="true">↗</span></button>
+            </div>
+            <div class="office-feed" id="office-feed"><h3>Atividade do escritório</h3><div class="feedrow"><span class="feedicon">◈</span><div><b>Ambiente visual preparado</b><small>Atlas e Secretária AI cadastrados na interface. Os serviços dos agentes ainda não foram conectados.</small></div></div><div class="feedrow"><span class="feedicon">◷</span><div><b>Sem execuções registradas</b><small>O feed operacional será habilitado quando os agentes registrarem eventos no banco.</small></div></div></div>
+         </section>
+         <section class="page" id="page-agente-atlas">
+            <button class="agent-back" type="button" data-back-office>← Voltar ao Escritório Virtual</button>
+            <div class="agent-header"><span class="office-avatar"><svg viewBox="0 0 60 70" aria-hidden="true"><rect x="17" y="40" width="26" height="23" rx="9" fill="#335d8f"/><rect x="9" y="11" width="42" height="37" rx="14" fill="#809dbf"/><rect x="14" y="16" width="32" height="26" rx="10" fill="#102139"/><circle cx="22" cy="29" r="4" fill="#79c4ff"/><circle cx="38" cy="29" r="4" fill="#79c4ff"/><path d="M24 38h12" stroke="#439bf6" stroke-width="2" stroke-linecap="round"/><rect x="28" y="4" width="4" height="9" rx="2" fill="#9dbad8"/><circle cx="30" cy="4" r="3" fill="#63d5ff"/><path d="M23 53h14" stroke="#74ceff" stroke-width="2"/></svg></span><div><div class="eyebrow">AGENTE COORDENADOR</div><h2>Atlas</h2><p>Planejamento, organização e distribuição de atividades</p></div></div>
+            <div class="agent-demo-controls" id="demo-controls-atlas" hidden><label for="simulate-atlas">Simular estado visual:</label><select id="simulate-atlas" data-sim="atlas"><option value="idle">Disponível</option><option value="working">Em atividade</option><option value="approval">Aguardando aprovação</option><option value="done">Concluído</option></select><span class="pill">Somente demonstração</span></div>
+            <div class="agent-limits"><b id="agent-state-atlas">Integração ainda não iniciada.</b> O Atlas não está executando tarefas autônomas nesta versão. Os registros abaixo não são resultados de IA.</div>
+            <div class="agent-detail-grid"><div class="panel"><h3>O que o Atlas fará</h3><div class="agent-feature"><span>◈</span> Organizar suas prioridades pessoais e profissionais</div><div class="agent-feature"><span>◇</span> Coordenar solicitações entre os agentes</div><div class="agent-feature"><span>□</span> Consolidar entregas e encaminhar decisões</div><div class="agent-actions"><button type="button" class="btn" id="atlas-view-tasks">Ver minhas tarefas</button><button type="button" class="btn alt" data-agent-chat="atlas">Conversar com Atlas</button></div></div><div class="panel"><h3>Histórico e aprovações</h3><p>Nenhuma execução real do coordenador registrada.</p><p>Nenhuma aprovação gerada por agente. O módulo de aprovações será integrado após a configuração do motor de execução.</p></div></div>
+         </section>
+         <section class="page" id="page-agente-secretaria">
+            <button class="agent-back" type="button" data-back-office>← Voltar ao Escritório Virtual</button>
+            <div class="agent-header"><span class="office-avatar"><svg viewBox="0 0 60 70" aria-hidden="true"><rect x="16" y="40" width="28" height="22" rx="10" fill="#4d6588"/><rect x="8" y="11" width="44" height="37" rx="17" fill="#c3d3e9"/><rect x="13" y="17" width="34" height="25" rx="11" fill="#122239"/><path d="M19 29q4-6 8 0M33 29q4-6 8 0" stroke="#8ae0ec" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M27 36q3 3 6 0" stroke="#6bdfe7" stroke-width="2" stroke-linecap="round" fill="none"/><rect x="28" y="5" width="4" height="8" rx="2" fill="#bbcce0"/><circle cx="30" cy="5" r="3" fill="#66e5d6"/><path d="M21 52h18" stroke="#87eadb" stroke-width="2"/></svg></span><div><div class="eyebrow">AGENTE ASSISTENTE EXECUTIVA</div><h2>Secretária AI</h2><p>E-mails, agenda, compromissos e respostas sugeridas</p></div></div>
+            <div class="agent-demo-controls" id="demo-controls-secretaria" hidden><label for="simulate-secretaria">Simular estado visual:</label><select id="simulate-secretaria" data-sim="secretaria"><option value="idle">Disponível</option><option value="working">Em atividade</option><option value="approval">Aguardando aprovação</option><option value="done">Concluído</option></select><span class="pill">Somente demonstração</span></div>
+            <div class="agent-limits"><b id="agent-state-secretaria">Integração ainda não iniciada.</b> A Secretária AI não lê e-mails nem altera agenda nesta versão. A conexão do Gmail no ChatGPT não autoriza acesso automático por este site.</div>
+            <div class="agent-detail-grid"><div class="panel"><h3>O que a Secretária AI fará</h3><div class="agent-feature"><span>✉</span> Identificar mensagens importantes e prazos</div><div class="agent-feature"><span>◷</span> Preparar resumos e acompanhar compromissos</div><div class="agent-feature"><span>✓</span> Sugerir rascunhos de respostas, sempre com aprovação</div><div class="agent-actions"><button type="button" class="btn" id="secretaria-view-emails">Ir para e-mails</button><button type="button" class="btn alt" data-agent-chat="secretaria">Conversar com Secretária AI</button></div></div><div class="panel"><h3>Histórico e aprovações</h3><p>Nenhum e-mail processado por este agente no Atlas.</p><p>Rascunhos não disponíveis. Nenhum envio de e-mail ou alteração de agenda pode ser executado nesta versão.</p></div></div>
+         </section>
+        <section class="page" id="page-tarefas">
+          <div class="heading"><div><div class="eyebrow">ORGANIZAÇÃO</div><h2>Minhas tarefas</h2><p>Filtre por prioridade, área e andamento.</p></div><button class="btn add-task">+ Nova tarefa</button></div>
+          <div class="filters"><select id="filter-area" aria-label="Área"><option value="all">Todas as áreas</option><option value="pessoal">Pessoal</option><option value="profissional">Profissional</option><option value="a_classificar">A classificar</option></select><select id="filter-status" aria-label="Status"><option value="all">Todos os status</option><option value="pendente">Pendentes</option><option value="em_andamento">Em andamento</option><option value="concluida">Concluídas</option><option value="cancelada">Canceladas</option></select></div>
+          <section class="panel" id="tasks-list"></section>
+        </section>
+        <section class="page" id="page-emails"><div class="heading"><div><div class="eyebrow">COMUNICAÇÃO</div><h2>E-mails</h2><p>Classificação inteligente, pendências e sugestões de resposta.</p></div></div><div class="panel empty"><div class="empty-icon">✉</div><h3>Integração em preparação</h3><p>Seu Gmail conectado ao ChatGPT não está automaticamente disponível neste site. Para conectar aqui, configuraremos uma autorização OAuth própria, com sua aprovação.</p></div></section>
+        <section class="page" id="page-documentos"><div class="heading"><div><div class="eyebrow">ARQUIVOS</div><h2>Documentos</h2><p>Localize documentos e obtenha sugestões de organização.</p></div></div><div class="panel empty"><div class="empty-icon">▤</div><h3>Google Drive ainda não conectado</h3><p>Documentos só serão acessados após você autorizar o site. Nenhum arquivo poderá ser movido ou excluído sem confirmação.</p></div></section>
+        <section class="page" id="page-memoria"><div class="heading"><div><div class="eyebrow">CONHECIMENTO</div><h2>Memória do Atlas</h2><p>Preferências e informações sob seu controle.</p></div><button class="btn" id="new-memory">+ Adicionar memória</button></div><div id="memories-list" class="panel"></div></section>
+        <section class="page" id="page-config"><div class="heading"><div><div class="eyebrow">SISTEMA</div><h2>Configurações</h2><p>Informações sobre seu acesso e integrações.</p></div></div><div class="panel"><h3>Estado do Atlas</h3><p class="text-note" id="config-state"></p><p class="text-note">Resumo agendado no ChatGPT: todos os dias, às 08h (Brasília). O agendamento atual do ChatGPT é independente desta aplicação.</p><p class="text-note">Tema: preto e azul. Conta: usuário único. Alterações em documentos e envio de mensagens exigem aprovação.</p></div></section>
+      </main>
+    </section>
+  </div>
+  <button id="chat-button" class="fab hidden">✦ Falar com Atlas</button>
+  <section id="chat-window" class="chat-popup hidden" aria-label="Conversa Atlas"><div class="chat-head"><span>✦ Atlas AI</span><button class="icon-btn" id="chat-close" aria-label="Fechar chat">×</button></div><div id="chat-messages" class="chat-messages"><div class="bubble">Olá! A inteligência artificial ainda não está conectada a este site. Você pode usar o painel de tarefas enquanto configuramos o agente.</div></div><form class="chat-input" id="chat-form"><input id="chat-text" aria-label="Mensagem" placeholder="Escreva uma mensagem..." required /><button class="btn" type="submit">➤</button></form></section>
+  <dialog id="task-dialog"><form id="task-form"><h3>Nova tarefa</h3><label class="field">Título<input id="task-title" required maxlength="160" /></label><label class="field">Descrição (opcional)<textarea id="task-desc" rows="3" maxlength="2000"></textarea></label><label class="field">Área<select id="task-area"><option value="pessoal">Pessoal</option><option value="profissional">Profissional</option><option value="a_classificar">A classificar</option></select></label><label class="field">Prioridade<select id="task-priority"><option value="media">Média</option><option value="alta">Alta</option><option value="critica">Crítica</option><option value="baixa">Baixa</option></select></label><label class="field">Prazo (opcional)<input id="task-due" type="datetime-local" /></label><p class="error" id="task-error"></p><div class="actions"><button type="button" id="task-cancel" class="btn alt">Cancelar</button><button class="btn" type="submit">Salvar tarefa</button></div></form></dialog>
+  <dialog id="memory-dialog"><form id="memory-form"><h3>Adicionar memória</h3><label class="field">Assunto<input id="memory-topic" maxlength="150" required /></label><label class="field">Conteúdo<textarea id="memory-content" rows="4" required maxlength="4000"></textarea></label><label class="field">Categoria<select id="memory-category"><option value="preferencia">Preferência</option><option value="rotina">Rotina</option><option value="decisao">Decisão</option><option value="contexto">Contexto</option><option value="outro">Outro</option></select></label><p class="text-note">Não cadastre senhas, chaves, dados bancários ou informações sensíveis.</p><p class="error" id="memory-error"></p><div class="actions"><button type="button" id="memory-cancel" class="btn alt">Cancelar</button><button type="submit" class="btn">Salvar memória</button></div></form></dialog>
+  <script>
+    'use strict';
+    // Publishable key é pública por definição. O banco exige autenticação + RLS + vínculo da conta titular.
+    const SUPABASE_URL = 'https://vjudlhkpuirlvmtpvlkw.supabase.co';
+    const SUPABASE_PUBLIC_KEY = 'sb_publishable_3uXU_GcJa7HQeqPB8ukIhQ_6WCwsffe';
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+    const demoSamples = [
+      {id:'demo-1',title:'Revisar compromissos da semana',description:'Exemplo fictício',area:'pessoal',priority:'media',status:'pendente',due_at:null},
+      {id:'demo-2',title:'Conferir documentos importantes',description:'Exemplo fictício',area:'profissional',priority:'alta',status:'pendente',due_at:null},
+      {id:'demo-3',title:'Organizar prioridades',description:'Exemplo fictício',area:'pessoal',priority:'baixa',status:'concluida',due_at:null}
+    ];
+    const state = {session:null,user:null,mode:'auth',tasks:[],memories:[],commands:[],routines:[],executions:[],signup:false};
+    const labels = {pessoal:'Pessoal',profissional:'Profissional',a_classificar:'A classificar',baixa:'Baixa',media:'Média',alta:'Alta',critica:'Crítica'};
+    function elt(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el;}
+    function errorMessage(e){return e?.message||'Não foi possível completar a solicitação.';}
+    function showAuthMessage(message,error=false){const el=$('#auth-message');el.textContent=message;el.className=error?'error':'success';}
+    function saveSession(session){state.session=session;try{if(session)sessionStorage.setItem('atlas_session_v1',JSON.stringify(session));else sessionStorage.removeItem('atlas_session_v1');}catch(e){console.warn('Sessão não persistida.');}}
+    async function call(path,{method='GET',body,authenticated=false,headers={}}={}){
+      const h={'apikey':SUPABASE_PUBLIC_KEY,...headers};
+      if(authenticated){if(!state.session?.access_token)throw new Error('Faça login novamente.');h.Authorization='Bearer '+state.session.access_token;}
+      if(body!==undefined){h['Content-Type']='application/json';}
+      let res;
+      try{res=await fetch(SUPABASE_URL+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});}
+      catch(e){throw new Error('Falha de conexão. Verifique sua internet e tente novamente.');}
+      let data=await res.json().catch(()=>null);
+      if(!res.ok)throw new Error(data?.msg||data?.error_description||data?.message||data?.error||('Erro '+res.status));
+      return data;
+    }
+    async function api(table,{method='GET',query='',body,prefer}={}){return call('/rest/v1/'+table+query,{method,body,authenticated:true,headers:prefer?{'Prefer':prefer}:{}});}
+    async function refreshSession(){if(!state.session?.refresh_token)return false;try{const s=await call('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:state.session.refresh_token}});s.expires_at = s.expires_at || Math.floor(Date.now()/1000) + (s.expires_in||3600);saveSession(s);return true;}catch(e){saveSession(null);return false;}}
+    async function ensureSession(){if(!state.session)return false;if(state.session.expires_at && state.session.expires_at*1000 < Date.now()+90_000)return refreshSession();return true;}
+    async function getCurrentUser(){await ensureSession();return call('/auth/v1/user',{authenticated:true});}
+    async function enterReal(){
+      state.user=await getCurrentUser();const owner=await api('atlas_owner',{query:'?select=user_id&limit=1'});
+      if(!Array.isArray(owner)||!owner.some(x=>x.user_id===state.user.id)){
+        const pendingId=state.user.id;
+        saveSession(null);state.user=null;
+        showAuthMessage('Conta autenticada, mas ainda não liberada como titular. ID para ativação: '+pendingId+'. Confirme que essa conta é sua antes da liberação administrativa.',true);
+        // Não permitir usuário não autorizado navegar pelos dados do Atlas.
+        return;
+      }
+      state.mode='real';await loadPrivate();showApp();
+    }
+    async function loadPrivate(){
+      await ensureSession();
+      const [tasks,memories,commands,routines,executions]=await Promise.all([
+        api('atlas_tasks',{query:'?select=id,title,description,area,status,priority,due_at,due_is_estimated,created_at&order=created_at.desc&limit=300'}),
+        api('atlas_memories',{query:'?select=id,category,topic,content,is_sensitive,created_at&is_active=eq.true&order=created_at.desc&limit=100'}),
+        api('atlas_agent_commands',{query:'?select=id,agent,command_kind,prompt,status,result_summary,created_at&order=created_at.desc&limit=60'}),
+        api('atlas_daily_routines',{query:'?select=id,title,instruction,agent,action_type,area,priority,run_time,enabled,last_run_local_date,created_at&order=created_at.desc&limit=100'}),
+        api('atlas_daily_executions',{query:'?select=routine_id,local_date,status,result_note,created_at&order=created_at.desc&limit=60'})
+      ]);
+      state.tasks=Array.isArray(tasks)?tasks:[];state.memories=Array.isArray(memories)?memories:[];state.commands=Array.isArray(commands)?commands:[];state.routines=Array.isArray(routines)?routines:[];state.executions=Array.isArray(executions)?executions:[];
+    }
+    function enterDemo(){state.mode='demo';state.tasks=demoSamples.map(t=>({...t}));state.memories=[];state.commands=[];state.routines=[];state.executions=[];showApp();}
+    function showApp(){ $('#auth-screen').classList.add('hidden');$('#app').classList.remove('hidden');$('#chat-button').classList.remove('hidden');$('#app-mode').textContent=state.mode==='demo'?'Demonstração':'Conectado ao Supabase';$('#mode-label').textContent=state.mode==='demo'?'Dados fictícios':'Conta autenticada';$('#account-label').textContent=state.mode==='demo'?'Atlas AI':(state.user?.email||'Minha conta');$('#main-callout').textContent=state.mode==='demo'?'Modo demonstração: exemplos fictícios que não são armazenados. Não insira dados privados.':'Sua lista de tarefas e memórias é armazenada no Supabase. Gmail, Drive e IA ainda dependem de autorização e integração próprias.';$('#config-state').textContent=state.mode==='demo'?'Demonstração sem acesso ao banco. Entre na conta titular para salvar tarefas.':'Conectado ao Supabase. Autenticação com e-mail e senha ativa; integração de login Google pendente de configuração OAuth.';navigate('escritorio');render();renderOffice();}
+    function showAuth(){state.mode='auth';$('#auth-screen').classList.remove('hidden');$('#app').classList.add('hidden');$('#chat-window').classList.add('hidden');$('#chat-button').classList.add('hidden');}
+    function navigate(page){$$('.page').forEach(el=>el.classList.toggle('selected',el.id==='page-'+page));$$('.nav-btn').forEach(el=>el.classList.toggle('selected',el.dataset.page===page));$('#page-title').textContent=({inicio:'Visão geral',tarefas:'Minhas tarefas',emails:'E-mails',documentos:'Documentos',memoria:'Memória',config:'Configurações',escritorio:'Escritório Virtual','agente-atlas':'Atlas · Coordenador','agente-secretaria':'Secretária AI'})[page]||'Atlas';$('#sidebar').classList.remove('open');$('#overlay').hidden=true;}
+    function dateLabel(value){if(!value)return 'Sem prazo';const d=new Date(value);return Number.isNaN(d.getTime())?'Sem prazo':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});}
+    function orderedTasks(){return [...state.tasks].sort((a,b)=>({critica:0,alta:1,media:2,baixa:3})[a.priority]-({critica:0,alta:1,media:2,baixa:3})[b.priority]);}
+    function render(){
+      const pending=state.tasks.filter(t=>!['concluida','cancelada'].includes(t.status));
+      $('#stat-pending').textContent=pending.length;$('#stat-high').textContent=pending.filter(t=>['alta','critica'].includes(t.priority)).length;$('#stat-done').textContent=state.tasks.filter(t=>t.status==='concluida').length;
+      const now=Date.now();$('#stat-due').textContent=pending.filter(t=>t.due_at&&new Date(t.due_at).getTime()>=now&&new Date(t.due_at).getTime()<=now+7*86400000).length;
+      const pr=$('#priority-list');pr.replaceChildren();orderedTasks().filter(t=>!['concluida','cancelada'].includes(t.status)).slice(0,5).forEach(t=>{let r=elt('div',undefined,'listrow'),copy=elt('div');copy.append(elt('b',t.title),elt('div',labels[t.area]+' · '+dateLabel(t.due_at)+(t.due_is_estimated?' · Estimado':''),'rowmeta'));r.append(copy,elt('span',labels[t.priority],'pill '+t.priority));pr.append(r);});if(!pr.children.length)pr.append(elt('p','Nenhuma prioridade pendente.','text-note'));
+      const list=$('#tasks-list');list.replaceChildren();let filtered=orderedTasks().filter(t=>($('#filter-area').value==='all'||t.area===$('#filter-area').value)&&($('#filter-status').value==='all'||t.status===$('#filter-status').value));
+      for(const t of filtered){const r=elt('div',undefined,'listrow'+(t.status==='concluida'?' task-done':''));const l=elt('div',undefined,'control');const cb=elt('input');cb.className='check';cb.type='checkbox';cb.checked=t.status==='concluida';cb.setAttribute('aria-label','Concluir '+t.title);cb.addEventListener('change',()=>toggleTask(t,cb.checked));const desc=elt('div');desc.append(elt('b',t.title,'task-title'),elt('div',labels[t.area]+' · '+labels[t.priority]+' · '+dateLabel(t.due_at)+(t.due_is_estimated?' (estimado)':''),'rowmeta'));l.append(cb,desc);let rm=elt('button','Excluir','icon-btn');rm.addEventListener('click',()=>removeTask(t));r.append(l,rm);list.append(r);}if(!list.children.length)list.append(elt('p','Nenhuma tarefa encontrada.','text-note'));
+      const ml=$('#memories-list');ml.replaceChildren();for(const m of state.memories){const r=elt('div',undefined,'listrow'),d=elt('div');d.append(elt('b',m.topic),elt('div',m.content,'rowmeta'));const remove=elt('button','Excluir','icon-btn');remove.onclick=()=>removeMemory(m);r.append(d,remove);ml.append(r);}if(!ml.children.length)ml.append(elt('p',state.mode==='demo'?'Memória desativada na demonstração.':'Nenhuma memória cadastrada. A captura automática ainda depende da IA.','text-note'));
+    }
+    async function toggleTask(t,checked){const before=t.status;t.status=checked?'concluida':'pendente';render();if(state.mode==='demo')return;try{await ensureSession();await api('atlas_tasks',{method:'PATCH',query:'?id=eq.'+encodeURIComponent(t.id),body:{status:t.status,completed_at:checked?new Date().toISOString():null}});}catch(e){t.status=before;render();alert('Não foi possível salvar: '+errorMessage(e));}}
+    async function removeTask(t){if(!confirm('Excluir esta tarefa?'))return;if(state.mode==='demo'){state.tasks=state.tasks.filter(x=>x!==t);render();return;}try{await ensureSession();await api('atlas_tasks',{method:'DELETE',query:'?id=eq.'+encodeURIComponent(t.id)});state.tasks=state.tasks.filter(x=>x.id!==t.id);render();}catch(e){alert('Falha ao excluir: '+errorMessage(e));}}
+    async function removeMemory(m){if(!confirm('Excluir esta memória?'))return;if(state.mode!=='real')return;try{await ensureSession();await api('atlas_memories',{method:'DELETE',query:'?id=eq.'+encodeURIComponent(m.id)});state.memories=state.memories.filter(x=>x.id!==m.id);render();}catch(e){alert('Falha ao excluir: '+errorMessage(e));}}
+    $('#auth-form').addEventListener('submit',async(e)=>{e.preventDefault();$('#auth-submit').disabled=true;showAuthMessage('Processando...');const email=$('#email').value.trim(),password=$('#password').value;try{if(state.signup){const data=await call('/auth/v1/signup',{method:'POST',body:{email,password}});showAuthMessage('Cadastro solicitado. Confirme seu e-mail se receber uma mensagem, depois entre na sua conta. A conta titular ainda precisará de liberação.');state.signup=false;$('#auth-title').textContent='Entre no seu Atlas';$('#auth-submit').textContent='Entrar';$('#toggle-signup').textContent='Criar minha conta';}else{const session=await call('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});session.expires_at=Math.floor(Date.now()/1000)+(session.expires_in||3600);saveSession(session);await enterReal();}}catch(e){showAuthMessage(errorMessage(e),true);}finally{$('#auth-submit').disabled=false;}});
+    $('#toggle-signup').addEventListener('click',()=>{state.signup=!state.signup;$('#auth-title').textContent=state.signup?'Crie sua conta Atlas':'Entre no seu Atlas';$('#auth-submit').textContent=state.signup?'Cadastrar':'Entrar';$('#toggle-signup').textContent=state.signup?'Já tenho conta':'Criar minha conta';showAuthMessage('');});
+    $('#toggle-recover').addEventListener('click',async()=>{const email=$('#email').value.trim();if(!email){showAuthMessage('Informe seu e-mail primeiro.',true);return;}try{await call('/auth/v1/recover',{method:'POST',body:{email}});showAuthMessage('Se o e-mail estiver cadastrado, você receberá instruções para recuperar a senha.');}catch(e){showAuthMessage(errorMessage(e),true);}});
+    $('#demo-button').onclick=enterDemo;
+    $('#exit-button').onclick=async()=>{if(state.mode==='real')try{await call('/auth/v1/logout',{method:'POST',authenticated:true});}catch(e){}saveSession(null);state.user=null;state.tasks=[];state.memories=[];state.commands=[];state.routines=[];state.executions=[];showAuth();};
+    $$('.nav-btn').forEach(b=>b.onclick=()=>navigate(b.dataset.page));$('#menu-open').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').hidden=false;};$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').hidden=true;};
+    $$('.add-task').forEach(btn=>btn.onclick=()=>$('#task-dialog').showModal());$('#task-cancel').onclick=()=>$('#task-dialog').close();$('#filter-area').onchange=render;$('#filter-status').onchange=render;
+    $('#task-form').addEventListener('submit',async e=>{e.preventDefault();const title=$('#task-title').value.trim();if(!title)return;const due=$('#task-due').value;const task={title,description:$('#task-desc').value.trim()||null,area:$('#task-area').value,priority:$('#task-priority').value,status:'pendente',due_at:due?new Date(due).toISOString():null,due_is_estimated:false,origin:'manual'};const err=$('#task-error');err.textContent='';try{if(state.mode==='demo'){state.tasks.unshift({...task,id:'demo-'+crypto.randomUUID()});}else{await ensureSession();const data=await api('atlas_tasks',{method:'POST',query:'?select=id,title,description,area,status,priority,due_at,due_is_estimated,created_at',body:task,prefer:'return=representation'});if(!data?.[0])throw new Error('Nenhuma tarefa foi retornada.');state.tasks.unshift(data[0]);}$('#task-dialog').close();e.target.reset();render();}catch(error){err.textContent=errorMessage(error);}});
+    $('#new-memory').onclick=()=>{if(state.mode==='demo'){alert('Entre na conta titular para cadastrar memórias.');return;}$('#memory-dialog').showModal();};$('#memory-cancel').onclick=()=>$('#memory-dialog').close();
+    $('#memory-form').addEventListener('submit',async e=>{e.preventDefault();$('#memory-error').textContent='';try{await ensureSession();const result=await api('atlas_memories',{method:'POST',query:'?select=id,category,topic,content,is_sensitive,created_at',body:{category:$('#memory-category').value,topic:$('#memory-topic').value.trim(),content:$('#memory-content').value.trim(),is_sensitive:false},prefer:'return=representation'});if(result?.[0])state.memories.unshift(result[0]);$('#memory-dialog').close();e.target.reset();render();}catch(error){$('#memory-error').textContent=errorMessage(error);}});
+    $('#chat-button').onclick=()=>{navigate('escritorio');$('#office-command-agent').value='atlas';$('#office-command-text').focus();};
+    $('#chat-close').onclick=()=>$('#chat-window').classList.add('hidden');
+    $('#chat-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#chat-text').value.trim();if(!text)return;navigate('escritorio');$('#office-command-kind').value='pedido_livre';$('#office-command-text').value=text;$('#chat-window').classList.add('hidden');$('#office-command-text').focus();$('#chat-text').value='';});
+
+     // Comandos e rotinas reais, sem imitar motor de linguagem ainda não conectado.
+     const officeSimulation = {atlas:'idle',secretaria:'idle'};
+     const officeLabels = {idle:'Disponível (simulado)',working:'Em atividade (simulado)',approval:'Aguardando aprovação (simulado)',done:'Concluído (simulado)'};
+     const commandStatus = {recebido:'Recebido',concluido:'Concluído no banco',aguardando_motor:'Aguardando IA',aguardando_integracao:'Aguardando Google',erro:'Erro'};
+     function officeText(id,value){const el=$(id);if(el)el.textContent=value;}
+     function formatOfficeTime(iso){if(!iso)return 'Sem registro';try{return new Date(iso).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short',timeZone:'America/Sao_Paulo'});}catch(e){return iso;}}
+     function officeRow(title,detail,actions){const row=elt('div',undefined,'office-listrow'),text=elt('div');text.append(elt('b',title),elt('small',detail));row.append(text);if(actions)row.append(actions);return row;}
+     function renderOffice(){
+       const demo=state.mode==='demo';
+       officeText('#office-scene-mode',demo?'Prévia ilustrativa':'Registros conectados ao banco');
+       officeText('#office-metric-commands',String(state.commands.length).padStart(2,'0'));
+       officeText('#office-metric-routines',String(state.routines.filter(r=>r.enabled).length).padStart(2,'0'));
+       officeText('#office-data-info',demo?'Demonstração: entre com a conta titular para enviar comandos e salvar rotinas.':'Motor de tarefas e agendador diários ativos no Supabase. Pedidos de IA, Gmail e Drive ficam registrados como pendentes até suas integrações serem autorizadas.');
+       for(const agent of ['atlas','secretaria']){
+         const control=$('#demo-controls-'+agent),badge=$('#status-card-'+agent),headline=$('#agent-state-'+agent);
+         control.hidden=!demo;badge.className='office-agent-status';
+         if(demo){const s=officeSimulation[agent];badge.textContent=officeLabels[s];badge.classList.add('sim-'+s);headline.textContent='Estado ilustrativo: '+officeLabels[s]+'.';$('#simulate-'+agent).value=s;}
+         else{const n=state.commands.filter(c=>c.agent===agent && (c.status==='aguardando_motor'||c.status==='aguardando_integracao')).length;
+           badge.textContent=n?`${n} aguardando integração`:'Comandos disponíveis';
+           headline.textContent=agent==='atlas'?'Criação de tarefas conectada ao banco. Respostas inteligentes ainda dependem de motor de IA.':'Registro de solicitações ativo. Leitura de e-mails e agenda ainda depende de OAuth Google.';
+         }
+       }
+       const routines=$('#office-routine-list');routines.replaceChildren();
+       if(demo){routines.append(elt('p','Entre para criar rotinas reais.','office-help'));}
+       else for(const r of state.routines){
+         const buttons=elt('div',undefined,'office-row-actions');
+         const toggle=elt('button',r.enabled?'Pausar':'Ativar','office-mini');toggle.type='button';toggle.onclick=()=>officeToggleRoutine(r);
+         const del=elt('button','Excluir','office-mini');del.type='button';del.onclick=()=>officeDeleteRoutine(r);
+         buttons.append(toggle,del);
+         routines.append(officeRow(r.title,`${r.agent==='atlas'?'Atlas':'Secretária AI'} · ${String(r.run_time).slice(0,5)} BRT · ${r.action_type==='criar_tarefa'?'Criar tarefa':'Aguardar IA'} · ${r.enabled?'Ativa':'Pausada'}`,buttons));
+       }
+       if(!routines.children.length)routines.append(elt('p','Nenhuma rotina cadastrada.','office-help'));
+       const commands=$('#office-command-list');commands.replaceChildren();
+       for(const c of state.commands.slice(0,25))commands.append(officeRow(c.prompt,`${c.agent==='atlas'?'Atlas':'Secretária AI'} · ${commandStatus[c.status]||c.status} · ${formatOfficeTime(c.created_at)}`));
+       if(!commands.children.length)commands.append(elt('p','Nenhum comando enviado neste escritório.','office-help'));
+       const feed=$('#office-feed');feed.replaceChildren(elt('h3','Atividade registrada'));
+       const events=[...state.commands.map(c=>({when:c.created_at,title:`${c.agent==='atlas'?'Atlas':'Secretária AI'}: ${commandStatus[c.status]||c.status}`,details:c.prompt})),...state.executions.map(e=>({when:e.created_at,title:e.status==='concluido'?'Tarefa diária cadastrada':'Rotina aguardando motor',details:e.result_note||''}))].sort((a,b)=>new Date(b.when)-new Date(a.when)).slice(0,6);
+       for(const e of events){const row=elt('div',undefined,'feedrow');row.append(elt('span','◷','feedicon'));const t=elt('div');t.append(elt('b',e.title),elt('small',`${formatOfficeTime(e.when)} · ${e.details}`));row.append(t);feed.append(row);}
+       if(!events.length)feed.append(elt('p','Nenhuma execução real registrada.','office-help'));
+     }
+     async function officeReload(){if(state.mode!=='real')return;await ensureSession();const [tasks,commands,routines,executions]=await Promise.all([
+       api('atlas_tasks',{query:'?select=id,title,description,area,status,priority,due_at,due_is_estimated,created_at&order=created_at.desc&limit=300'}),
+       api('atlas_agent_commands',{query:'?select=id,agent,command_kind,prompt,status,result_summary,created_at&order=created_at.desc&limit=60'}),
+       api('atlas_daily_routines',{query:'?select=id,title,instruction,agent,action_type,area,priority,run_time,enabled,last_run_local_date,created_at&order=created_at.desc&limit=100'}),
+       api('atlas_daily_executions',{query:'?select=routine_id,local_date,status,result_note,created_at&order=created_at.desc&limit=60'})]);
+       state.tasks=tasks||[];state.commands=commands||[];state.routines=routines||[];state.executions=executions||[];render();renderOffice();}
+     $('#office-command-form').addEventListener('submit',async e=>{
+       e.preventDefault();const out=$('#office-command-result'),btn=e.currentTarget.querySelector('button[type=submit]');
+       if(state.mode!=='real'){out.textContent='Entre na conta titular para enviar comandos reais.';return;}
+       const command_kind=$('#office-command-kind').value,prompt=$('#office-command-text').value.trim();if(!prompt)return;
+       btn.disabled=true;out.textContent='Enviando ao Atlas...';
+       try{await ensureSession();await api('atlas_agent_commands',{method:'POST',body:{agent:$('#office-command-agent').value,command_kind,prompt,area:$('#office-command-area').value,priority:$('#office-command-priority').value}});
+         await officeReload();out.textContent=command_kind==='criar_tarefa'?'Tarefa criada no Supabase e disponível na sua lista.':command_kind==='solicitar_resumo'?'Comando salvo. Gmail/Drive ainda não estão autorizados neste site.':'Pedido salvo, aguardando conexão do modelo de IA.';$('#office-command-text').value='';
+       }catch(error){out.textContent='Falha: '+errorMessage(error);}finally{btn.disabled=false;}
+     });
+     $('#office-routine-form').addEventListener('submit',async e=>{
+       e.preventDefault();const out=$('#office-routine-result'),btn=e.currentTarget.querySelector('button[type=submit]');
+       if(state.mode!=='real'){out.textContent='Entre na conta titular para criar rotinas.';return;}
+       btn.disabled=true;out.textContent='Salvando rotina...';
+       try{await ensureSession();await api('atlas_daily_routines',{method:'POST',body:{agent:$('#office-routine-agent').value,title:$('#office-routine-title').value.trim(),instruction:$('#office-routine-instruction').value.trim(),action_type:$('#office-routine-type').value,area:$('#office-routine-area').value,priority:$('#office-routine-priority').value,run_time:$('#office-routine-time').value+':00',tz:'America/Sao_Paulo',enabled:true}});
+         await officeReload();out.textContent='Rotina diária salva. O agendador processa tarefas a cada cinco minutos após o horário definido.';e.currentTarget.reset();$('#office-routine-time').value='08:00';
+       }catch(error){out.textContent='Falha: '+errorMessage(error);}finally{btn.disabled=false;}
+     });
+     async function officeToggleRoutine(r){try{await ensureSession();await api('atlas_daily_routines',{method:'PATCH',query:'?id=eq.'+r.id,body:{enabled:!r.enabled}});await officeReload();}catch(e){alert(errorMessage(e));}}
+     async function officeDeleteRoutine(r){if(!confirm('Excluir a rotina diária "'+r.title+'"?'))return;try{await ensureSession();await api('atlas_daily_routines',{method:'DELETE',query:'?id=eq.'+r.id});await officeReload();}catch(e){alert(errorMessage(e));}}
+     $$('[data-agent]').forEach(b=>b.addEventListener('click',()=>{navigate('agente-'+b.dataset.agent);renderOffice();window.scrollTo({top:0,behavior:'instant'});}));
+     $$('[data-back-office]').forEach(b=>b.addEventListener('click',()=>{navigate('escritorio');window.scrollTo({top:0,behavior:'instant'});}));
+     $$('[data-sim]').forEach(el=>el.addEventListener('change',()=>{if(state.mode!=='demo')return;officeSimulation[el.dataset.sim]=el.value;renderOffice();}));
+     $('#atlas-view-tasks').onclick=()=>navigate('tarefas');
+     $('#secretaria-view-emails').onclick=()=>navigate('emails');
+     $$('[data-agent-chat]').forEach(btn=>btn.onclick=()=>{navigate('escritorio');$('#office-command-agent').value=btn.dataset.agent;$('#office-command-text').focus();});
+     document.querySelectorAll('.nav-btn[data-page="escritorio"]').forEach(b=>b.addEventListener('click',()=>{if(state.mode==='real')officeReload().catch(e=>console.warn('Falha ao atualizar escritório',e));}));
+    (async()=>{try{const saved=JSON.parse(sessionStorage.getItem('atlas_session_v1')||'null');if(saved?.access_token){state.session=saved;await enterReal();}}catch(e){saveSession(null);showAuthMessage('Faça login para acessar seus dados.',false);}})();
+  </script>
+</body>
+</html>
