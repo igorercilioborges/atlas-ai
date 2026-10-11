@@ -288,6 +288,27 @@
 @media(max-width:650px){.presence-private{display:none!important}.presence-customize span{display:none}.presence-customize{padding:10px 13px}.presence-avatar{top:45%;width:min(91vw,440px);height:63dvh}.presence-main{margin-bottom:0}.presence-settings{top:60px}}
 @media(prefers-reduced-motion:reduce){.presence-avatar,.presence-avatar .avatar-eye{animation:none!important}}
 
+
+/* ATLAS 1.2: restore photorealistic, futuristic portrait and keep audio-reactive overlay subtle. */
+.presence-portrait img{opacity:.94!important;filter:contrast(1.08) saturate(1.18) drop-shadow(0 0 18px #1b96ea42)!important;mask-image:radial-gradient(ellipse 72% 82% at 55% 47%,#000 45%,transparent 97%)}
+.presence-dialog.is-secretaria .presence-portrait img{opacity:.91!important;filter:contrast(1.1) saturate(1.24) hue-rotate(18deg)!important}
+.presence-avatar{opacity:.10;mix-blend-mode:screen;filter:drop-shadow(0 0 16px #1bdbff)!important;transform:translate(-50%,-53%) scale(.9)!important;pointer-events:none}
+.presence-scene[data-state="speaking"] .presence-avatar{opacity:.28;filter:drop-shadow(0 0 24px #45d4ff)!important}
+.presence-scene[data-state="listening"] .presence-avatar{opacity:.16}
+.presence-portrait{--speech-level:0}
+.presence-portrait::after{content:'';position:absolute;z-index:2;left:41%;top:62%;width:12%;height:1.9%;border-radius:50%;background:radial-gradient(ellipse,#69caffad,transparent 72%);box-shadow:0 0 calc(4px + 16px * var(--speech-level)) rgba(85,190,255,.5);transform:scaleY(calc(1 + var(--speech-level) * 1.7));opacity:calc(.05 + var(--speech-level) * .5);pointer-events:none;transition:opacity .07s}
+.presence-dialog.is-secretaria .presence-portrait::after{left:47%;background:radial-gradient(ellipse,#aafce1,transparent 72%)}
+.presence-portrait.mouth-speaking::after{animation:presence-mouth-light .36s ease-in-out infinite alternate}
+@keyframes presence-mouth-light{from{filter:brightness(.8)}to{filter:brightness(1.35)}}
+.provider-check{border:1px solid #3d6688;background:#0c2642;color:#def0ff;border-radius:11px;padding:9px 12px;font-size:12px;cursor:pointer}
+.provider-check:hover{background:#153a5d}
+.provider-hint{font-size:11px;color:#a4bed8;line-height:1.6;margin:8px 0 0}
+
+.voice-key-manager{margin:14px 0;padding:12px;background:#081a2e;border:1px solid #355675;border-radius:14px;color:#d3edff;font-size:12px}
+.voice-key-manager summary{cursor:pointer;font-weight:700}
+.voice-key-manager input{background:#061322;border:1px solid #4f7394;color:white;border-radius:10px;padding:12px;width:100%;font-family:inherit}
+.voice-key-manager .provider-check{margin-top:12px;width:100%}
+
 </style>
 </head>
 <body>
@@ -485,6 +506,7 @@
     <div class="office-panel-note">O Atlas solicitará acesso de leitura ao Gmail e ao Google Drive. O Google poderá solicitar nova autorização periodicamente enquanto o aplicativo estiver em teste. Nenhum e-mail será enviado e nenhum arquivo será editado ou excluído por este recurso.</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin:17px 0">
       <button class="btn" id="google-connect" type="button">Conectar conta Google</button>
+      <button class="btn alt" id="google-test" type="button">Diagnosticar Google</button>
       <button class="btn alt" id="google-sync" type="button" hidden>Sincronizar agora</button>
       <button class="btn ghost" id="google-disconnect" type="button" hidden>Desconectar Google</button>
     </div>
@@ -567,6 +589,17 @@
   <label>Voz natural (ElevenLabs)<select id="presence-voice-select"><option value="">Carregando vozes disponíveis...</option></select></label>
   <p id="presence-voice-guidance">Atlas: voz masculina neutra. Secretária: voz feminina neutra. Você pode escolher outra voz disponível.</p>
   <div class="presence-settings-buttons"><button type="submit">Salvar preferências</button><button type="button" id="presence-voice-preview">Ouvir exemplo</button></div>
+  <button class="provider-check" type="button" id="presence-test-voice">Verificar acesso ElevenLabs</button>
+  <p class="presence-settings-result" id="presence-test-result" role="status"></p>
+  <p class="provider-hint">Se a chave for recusada, a voz do aparelho será usada temporariamente. Uma nova chave válida da ElevenLabs é necessária para a voz humanizada.</p>
+  <details class="voice-key-manager"><summary>Substituir chave ElevenLabs com segurança</summary>
+    <label style="display:grid;gap:8px;margin-top:10px">Cole aqui uma chave NOVA de sua conta ElevenLabs
+      <input id="presence-new-eleven-key" type="password" minlength="25" maxlength="400" autocomplete="new-password" spellcheck="false" placeholder="Chave privada — não será exibida nem salva no navegador" />
+    </label>
+    <button type="button" class="provider-check" id="presence-save-eleven-key">Validar e armazenar no Supabase</button>
+    <p class="provider-hint">Este envio vai diretamente ao serviço protegido do Atlas, que verifica a chave antes de atualizar o Supabase Vault. Não use a chave já exposta anteriormente.</p>
+    <p class="presence-settings-result" id="presence-key-save-result" role="status"></p>
+  </details>
   <p class="presence-settings-result" id="presence-settings-result" role="status"></p>
  </form>
  </section>
@@ -924,6 +957,16 @@ async function atlasGoogleLoad(){
   atlasGoogleList('#google-drive-items',(rows||[]).filter(x=>x.provider==='drive'),'Nenhum documento recente sincronizado.');
  }catch(e){googleMessage('Não foi possível atualizar as listas: '+errorMessage(e),true);}
 }
+$('#google-test').addEventListener('click',async()=>{
+ const b=$('#google-test');b.disabled=true;googleMessage('Conferindo OAuth com segurança...');
+ try{
+  const d=await atlasGoogleRequest('atlas-google-auth',{action:'status'});
+  updateGoogleControls(d);
+  if(d.connected)googleMessage('Google autorizado: '+d.email+'. Use Sincronizar agora.');
+  else if(!d.configured)googleMessage('OAuth incompleto: confira GOOGLE_CLIENT_SECRET em Edge Functions → Secrets (valor do segredo do cliente OAuth, não Client ID).');
+  else googleMessage('Credenciais OAuth reconhecidas pelo Supabase. Toque em Conectar conta Google, escolha sua conta e conceda acesso ao Gmail e Drive.');
+ }catch(e){googleMessage('Diagnóstico Google: '+errorMessage(e),true);}finally{b.disabled=false;}
+});
 $('#google-connect').addEventListener('click',async()=>{
  const b=$('#google-connect');b.disabled=true;googleMessage('Preparando autorização no Google...');
  try{const result=await atlasGoogleRequest('atlas-google-auth',{action:'start'});if(!result.authorization_url||!result.authorization_url.startsWith('https://accounts.google.com/'))throw new Error('Endereço de autorização inválido.');window.location.assign(result.authorization_url);}
@@ -1185,6 +1228,7 @@ if(new URLSearchParams(location.search).has('google')){
     function stopVAD(){if(presence.raf){cancelAnimationFrame(presence.raf);presence.raf=null;}}
     function stopAudioRecord(){if(presence.recorder?.state==='recording'){try{presence.recorder.stop();}catch{}}}
     function stopPresence(){
+      if('speechSynthesis' in window){try{speechSynthesis.cancel();}catch{}}browserSpeechActive=false;
       presence.active=false;presence.turn+=1;
       stopVAD();stopAudioRecord();presence.recorder=null;
       if(presence.speakerRaf){cancelAnimationFrame(presence.speakerRaf);presence.speakerRaf=null;}
@@ -1304,6 +1348,49 @@ if(new URLSearchParams(location.search).has('google')){
         else setPresenceState('error','Não foi possível enviar a mensagem.');
       }
     }
+    async function diagnoseVoiceService(){
+      const box=$('#presence-test-result');box.textContent='Verificando a ElevenLabs...';
+      try{
+        const result=await voiceRequest({action:'diagnose'});
+        box.textContent=result.ok?'✓ Chave autenticada na ElevenLabs. Se TTS continuar falhando, revise a voz e as permissões de síntese.':(result.error||'A verificação não foi concluída.');
+      }catch(e){box.textContent='Diagnóstico: '+errorMessage(e);}
+    }
+    $('#presence-test-voice').addEventListener('click',diagnoseVoiceService);
+    $('#presence-save-eleven-key').addEventListener('click',async()=>{
+      const value=$('#presence-new-eleven-key').value.trim(), el=$('#presence-key-save-result'),b=$('#presence-save-eleven-key');
+      if(value.length<25){el.textContent='Cole uma chave ElevenLabs válida criada em Developers → API Keys.';return;}
+      if(!window.confirm('Substituir a chave ElevenLabs do Atlas por esta nova chave?'))return;
+      b.disabled=true;el.textContent='Validando a nova chave diretamente na ElevenLabs...';
+      try{
+        const res=await voiceRequest({action:'rotate_key',api_key:value});
+        el.textContent=res.message||'Chave salva no Supabase Vault.';
+        $('#presence-new-eleven-key').value='';presence.voices=null;
+        $('#presence-test-result').textContent='Nova chave cadastrada. Execute novamente Verificar acesso ElevenLabs para testar.';
+      }catch(e){el.textContent='Falha na validação: '+errorMessage(e);}
+      finally{b.disabled=false;}
+    });
+    let browserSpeechActive=false;
+    function speakWithDeviceFallback(text,turn){
+      return new Promise((resolve,reject)=>{
+        if(!('speechSynthesis' in window)||!window.SpeechSynthesisUtterance){reject(new Error('Este navegador não oferece voz local.'));return;}
+        try{
+          if(turn!==presence.turn){resolve();return;}
+          speechSynthesis.cancel();
+          const utterance=new SpeechSynthesisUtterance(text.slice(0,1000));
+          utterance.lang='pt-BR';utterance.rate=.96;utterance.pitch=presence.agent==='atlas'?.88:1.05;utterance.volume=1;
+          const options=speechSynthesis.getVoices(),pt=options.filter(v=>/pt[-_](BR|PT)/i.test(v.lang));
+          const preferred=pt.find(v=>presence.agent==='atlas'?/male|masc|homem|antonio|daniel/i.test(v.name):/female|fem|mulher|maria|luciana|francisca/i.test(v.name));
+          utterance.voice=preferred||pt.find(v=>v.localService)||pt[0]||null;
+          let ended=false;
+          const finish=(err)=>{if(ended)return;ended=true;browserSpeechActive=false;$('#presence-portrait').classList.remove('mouth-speaking');$('#presence-portrait').style.setProperty('--speech-level','0');$('#presence-avatar').style.setProperty('--mouth-open','1');if(err)reject(err);else resolve();};
+          utterance.onstart=()=>{browserSpeechActive=true;setPresenceState('speaking',agentName(presence.agent)+' está respondendo com voz do aparelho (contingência).');$('#presence-portrait').classList.add('mouth-speaking');};
+          utterance.onboundary=()=>{$('#presence-avatar').style.setProperty('--mouth-open',(1.5+Math.random()*2.3).toFixed(2));$('#presence-portrait').style.setProperty('--speech-level',(.3+Math.random()*.6).toFixed(2));};
+          utterance.onend=()=>finish();
+          utterance.onerror=e=>finish(new Error('Voz do aparelho falhou: '+(e.error||'erro desconhecido')));
+          speechSynthesis.speak(utterance);
+        }catch(e){reject(e);}
+      });
+    }
     async function choosePresenceVoice(){
       const a=presence.agent;
       if(!presence.voices){const r=await voiceRequest({action:'voices'});presence.voices=r.voices||[];}
@@ -1337,6 +1424,7 @@ if(new URLSearchParams(location.search).has('google')){
         const rms=Math.sqrt(sum/levels.length);
         const mouth=Math.min(5.5,Math.max(.7,.8+rms*36));
         $('#presence-avatar').style.setProperty('--mouth-open',mouth.toFixed(2));
+        $('#presence-portrait').style.setProperty('--speech-level',Math.min(1,rms*8).toFixed(2));
         presence.speakerRaf=requestAnimationFrame(animate);
       };
       $('#presence-portrait').classList.add('mouth-speaking');
@@ -1345,6 +1433,7 @@ if(new URLSearchParams(location.search).has('google')){
       finally{
         if(presence.speakerRaf){cancelAnimationFrame(presence.speakerRaf);presence.speakerRaf=null;}
         $('#presence-avatar').style.setProperty('--mouth-open','1');
+        $('#presence-portrait').style.setProperty('--speech-level','0');
         $('#presence-portrait').classList.remove('mouth-speaking');
         if(presence.utteranceSource===src)presence.utteranceSource=null;
         try{src.disconnect();analyser.disconnect();}catch{}
@@ -1366,8 +1455,14 @@ if(new URLSearchParams(location.search).has('google')){
         if(turn===presence.turn)$('#presence-live-text').textContent=(text.length>1600?'Áudio reproduzido até o limite de 1.600 caracteres. A resposta completa está na transcrição. ':'Resposta reproduzida. ')+(voiceSession?'Pode continuar falando.':'Você pode digitar outra mensagem ou iniciar o microfone.');
       }catch(e){
         if(turn===presence.turn){
-          setPresenceState('error','A resposta foi escrita, mas o áudio falhou: '+errorMessage(e));
-          pushTranscript('Erro ao reproduzir voz: '+errorMessage(e),'system');
+          pushTranscript('ElevenLabs indisponível: '+errorMessage(e),'system');
+          setPresenceState('thinking','ElevenLabs indisponível. Tentando a voz do dispositivo...');
+          try{
+            await speakWithDeviceFallback(text,turn);
+            if(turn===presence.turn)$('#presence-live-text').textContent='Resposta reproduzida com a voz de contingência do aparelho. Para voz ElevenLabs, corrija a chave/permissões em Personalizar.';
+          }catch(fallbackErr){
+            if(turn===presence.turn)setPresenceState('error','Áudio indisponível: '+errorMessage(e)+' · Voz do aparelho: '+errorMessage(fallbackErr));
+          }
         }
       }finally{
         presence.speaking=false;
