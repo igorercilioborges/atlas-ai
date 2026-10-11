@@ -309,6 +309,54 @@
 .voice-key-manager input{background:#061322;border:1px solid #4f7394;color:white;border-radius:10px;padding:12px;width:100%;font-family:inherit}
 .voice-key-manager .provider-check{margin-top:12px;width:100%}
 
+
+/* Atlas 1.3: avatar vetorial principal, com movimento em olhos, cabeca e boca.
+   A antiga fotografia continua no codigo como patrimonio visual, mas nao domina a cena. */
+.presence-portrait img#presence-portrait-image {display:none!important}
+.presence-portrait .presence-avatar {
+  opacity:1!important;mix-blend-mode:normal!important;
+  transform:translate(-50%,-53%) scale(1)!important;
+  width:min(88vw,540px)!important;height:min(70dvh,600px)!important;
+  filter:drop-shadow(0 22px 60px #020c20) drop-shadow(0 0 32px #3e9fff9a)!important;
+  animation:atlas-alive 3.8s ease-in-out infinite!important;
+  will-change:translate,rotate;
+}
+.presence-dialog.is-secretaria .presence-portrait .presence-avatar {
+  filter:hue-rotate(64deg) drop-shadow(0 22px 60px #041b21) drop-shadow(0 0 38px #3cffd98a)!important;
+}
+.presence-avatar .avatar-eye {animation:atlas-eyes-live 3.4s ease-in-out infinite!important;transform-box:fill-box;transform-origin:center}
+.presence-avatar .avatar-eye-right {animation-delay:-.09s!important}
+.presence-avatar .avatar-mouth {
+  transform-box:fill-box;transform-origin:center;
+  transform:scaleY(var(--mouth-open,1))!important;
+  transition:transform .065s ease-out!important;
+  filter:drop-shadow(0 0 14px #45e0ff)
+}
+.presence-scene[data-state="speaking"] .presence-avatar {animation:atlas-talking .46s ease-in-out infinite!important}
+.presence-scene[data-state="listening"] .presence-avatar .avatar-eye {filter:drop-shadow(0 0 15px #42d1ff)}
+.presence-scene[data-state="thinking"] .presence-avatar {animation:atlas-thinking .8s ease-in-out infinite alternate!important}
+.presence-scene[data-state="error"] .presence-avatar {filter:grayscale(.4) drop-shadow(0 0 22px #ff9870)!important}
+@keyframes atlas-alive {
+  0%,100% {translate:0 1px;rotate:-1.2deg}
+  32% {translate:0 -13px;rotate:1.5deg}
+  69% {translate:0 -6px;rotate:-.6deg}
+}
+@keyframes atlas-talking {0%,100%{translate:0 -4px;rotate:-.4deg}50%{translate:0 -10px;rotate:1.0deg}}
+@keyframes atlas-thinking {from{translate:0 -2px;rotate:-1.1deg}to{translate:0 -12px;rotate:1.4deg}}
+@keyframes atlas-eyes-live {
+  0%,18%,43%,51%,77%,92%,100%{transform:scaleY(1) translateX(0)}
+  20%,22%,79%{transform:scaleY(.08) translateX(0)}
+  46%,48%{transform:scaleY(1) translateX(3px)}
+  57%,62%{transform:scaleY(1) translateX(-2px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .presence-portrait .presence-avatar,
+ .presence-avatar .avatar-eye {animation:none!important}
+}
+.oauth-test-help {margin:14px 0 10px;padding:14px;border-radius:14px;background:#0b2740;border:1px solid #34658c;color:#c2ddf2;font-size:12px;line-height:1.65}
+.oauth-test-help a {color:#8cd2ff;text-decoration:underline}
+.maintenance-note {font-size:11px;color:#acd3f1;line-height:1.6;margin:10px 0}
+
 </style>
 </head>
 <body>
@@ -503,6 +551,7 @@
   <div class="panel" style="margin-bottom:18px">
     <h3>Autorização Google</h3>
     <p id="google-connection-status" class="sub" role="status">Verificando conexão...</p>
+    <div class="oauth-test-help"><strong>Erro 403: access_denied?</strong> O Google informou que o Atlas está em modo de testes. Abra <a href="https://console.cloud.google.com/auth/audience" target="_blank" rel="noopener noreferrer">Google Auth Platform → Público-alvo</a>, adicione <strong>igorercilio0711@gmail.com</strong> em <strong>Usuários de teste</strong>, salve e tente conectar novamente. Isso é necessário mesmo com o OAuth e as APIs configurados.</div>
     <div class="office-panel-note">O Atlas solicitará acesso de leitura ao Gmail e ao Google Drive. O Google poderá solicitar nova autorização periodicamente enquanto o aplicativo estiver em teste. Nenhum e-mail será enviado e nenhum arquivo será editado ou excluído por este recurso.</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin:17px 0">
       <button class="btn" id="google-connect" type="button">Conectar conta Google</button>
@@ -589,7 +638,7 @@
   <label>Voz natural (ElevenLabs)<select id="presence-voice-select"><option value="">Carregando vozes disponíveis...</option></select></label>
   <p id="presence-voice-guidance">Atlas: voz masculina neutra. Secretária: voz feminina neutra. Você pode escolher outra voz disponível.</p>
   <div class="presence-settings-buttons"><button type="submit">Salvar preferências</button><button type="button" id="presence-voice-preview">Ouvir exemplo</button></div>
-  <button class="provider-check" type="button" id="presence-test-voice">Verificar acesso ElevenLabs</button>
+  <button class="provider-check" type="button" id="presence-test-voice">Verificar acesso ElevenLabs</button><p class="maintenance-note">Se aparecer <strong>missing_permissions</strong>, ative <strong>Voices Read, Text to Speech e Speech to Text</strong> em <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener noreferrer">ElevenLabs → API Keys</a>, ou crie outra chave com essas permissões e use o campo seguro abaixo.</p>
   <p class="presence-settings-result" id="presence-test-result" role="status"></p>
   <p class="provider-hint">Se a chave for recusada, a voz do aparelho será usada temporariamente. Uma nova chave válida da ElevenLabs é necessária para a voz humanizada.</p>
   <details class="voice-key-manager"><summary>Substituir chave ElevenLabs com segurança</summary>
@@ -1224,7 +1273,35 @@ if(new URLSearchParams(location.search).has('google')){
       setPresenceState('idle',p.greeting);
       $('#presence-start-label').textContent='Iniciar conversa';$('#presence-settings').hidden=true;$('#presence-replay').hidden=true;
       d.showModal();fetchAgentPreferences();
+      startFaceAnimation();
     }
+    // The ElevenLabs decoded waveform controls lip movement precisely. Browser TTS
+    // does not expose samples; use a visual speaking approximation in that fallback.
+    let faceAnimationId=0,lastFaceTick=0;
+    function startFaceAnimation(){
+      if(faceAnimationId)cancelAnimationFrame(faceAnimationId);
+      const tick=(now)=>{
+        if(!$('#agent-immersive-dialog').open){faceAnimationId=0;return;}
+        if(now-lastFaceTick>45){
+          lastFaceTick=now;
+          const scene=$('#presence-scene'),avatar=$('#presence-avatar');
+          const speaking=scene.dataset.state==='speaking';
+          if(speaking&&!presence.utteranceSource){
+            const wave=(Math.sin(now*.018)+1)*.5;
+            const quick=(Math.sin(now*.049+.7)+1)*.5;
+            const level=Math.min(1,.17+wave*.43+quick*.24);
+            avatar.style.setProperty('--mouth-open',(1.0+level*3.8).toFixed(2));
+            $('#presence-portrait').style.setProperty('--speech-level',level.toFixed(2));
+          }else if(!speaking&&!presence.utteranceSource){
+            avatar.style.setProperty('--mouth-open','1');
+            $('#presence-portrait').style.setProperty('--speech-level','0');
+          }
+        }
+        faceAnimationId=requestAnimationFrame(tick);
+      };
+      faceAnimationId=requestAnimationFrame(tick);
+    }
+    function stopFaceAnimation(){if(faceAnimationId){cancelAnimationFrame(faceAnimationId);faceAnimationId=0;}}
     function stopVAD(){if(presence.raf){cancelAnimationFrame(presence.raf);presence.raf=null;}}
     function stopAudioRecord(){if(presence.recorder?.state==='recording'){try{presence.recorder.stop();}catch{}}}
     function stopPresence(){
@@ -1343,7 +1420,8 @@ if(new URLSearchParams(location.search).has('google')){
         await speakAndReturn(response,turn,voice);
       }catch(e){
         if(turn!==presence.turn)return;
-        pushTranscript('Não consegui consultar o Gemini: '+errorMessage(e),'system');
+        const providerNotice=errorMessage(e);
+        pushTranscript('Não consegui consultar o Gemini: '+providerNotice,'system');
         if(voice){presence.busy=false;setPresenceState('error','Houve um problema ao responder. Vou voltar a ouvir.');beginListening();}
         else setPresenceState('error','Não foi possível enviar a mensagem.');
       }
@@ -1473,7 +1551,7 @@ if(new URLSearchParams(location.search).has('google')){
       }
     }
     $('#agent-immersive-close').addEventListener('click',()=>$('#agent-immersive-dialog').close());
-    $('#agent-immersive-dialog').addEventListener('close',()=>stopPresence());
+    $('#agent-immersive-dialog').addEventListener('close',()=>{stopFaceAnimation();stopPresence();});
     $('#presence-start').addEventListener('click',startPresence);
     $('#presence-replay').addEventListener('click',async()=>{if(!presence.lastResponse||presence.active)return;try{await preparePlaybackAudio();await speakAndReturn(presence.lastResponse,presence.turn,false);}catch(e){setPresenceState('error',errorMessage(e));}});
     $('#presence-text-toggle').addEventListener('click',()=>{const area=$('#presence-typing');const opening=area.hidden;area.hidden=!opening;$('#presence-text-toggle').setAttribute('aria-expanded',String(opening));if(opening)$('#presence-input').focus();});
